@@ -6,7 +6,7 @@ Simple arduino based line tracker implementation
 - Two Motors
 - HBridge
 
-- Sensor Positions
+- Sensor Position
 
 ```plaintext
 
