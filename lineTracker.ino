@@ -60,18 +60,18 @@ typedef struct {
 
 //fix this
 const uint8_t sensorGpio[S_MAX] = {
-  [S_RR] = 0,
-  [S_CR] = 0,
-  [S_CM] = 0,
-  [S_FM] = 0,
-  [S_CL] = 0,
-  [S_LL] = 0,
+  [S_RR] = 19,
+  [S_CR] = 18,
+  [S_CM] = 3,
+  [S_FM] = 2,
+  [S_CL] = 20,
+  [S_LL] = 21,
 };
 
 //fix this
 const motorInterface motor[] = {
-  [M_LEFT] = {0, 0},
-  [M_RIGHT] = {0, 0}
+  [M_LEFT] = {4, 5},
+  [M_RIGHT] = {6, 7}
 };
 
 const steering_table_t straightSteer[] = {
