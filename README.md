@@ -1,6 +1,6 @@
 # lineTracker
 
-Simple line tracker implementation
+Simple arduino based line tracker implementation
 
 - Phototransistor used for line detection x 6
 - Two Motors
