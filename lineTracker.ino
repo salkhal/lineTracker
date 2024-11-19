@@ -76,10 +76,10 @@ const motorInterface motor[] = {
 
 const steering_table_t straightSteer[] = {
   { .state = ON_LINE, .leftDutyCycle = 255, .rightDutyCycle = 255, .rightMotor = MD_FORWARD, .leftMotor = MD_FORWARD },
-  { .state = GOING_RIGHT_0, .leftDutyCycle = 75, .rightDutyCycle = 255, .rightMotor = MD_FORWARD, .leftMotor = MD_FORWARD },
-  { .state = GOING_LEFT_0, .leftDutyCycle = 255, .rightDutyCycle = 75, .rightMotor = MD_FORWARD, .leftMotor = MD_FORWARD },
-  { .state = GOING_RIGHT_1, .leftDutyCycle = 0, .rightDutyCycle = 255, .rightMotor = MD_FORWARD, .leftMotor = MD_COAST },
-  { .state = GOING_LEFT_1, .leftDutyCycle = 255, .rightDutyCycle = 0, .rightMotor = MD_COAST, .leftMotor = MD_FORWARD },
+  { .state = GOING_RIGHT_0, .leftDutyCycle = 75, .rightDutyCycle = 255, .rightMotor = MD_FORWARD, .leftMotor = MD_BRAKE },
+  { .state = GOING_LEFT_0, .leftDutyCycle = 255, .rightDutyCycle = 75, .rightMotor = MD_BRAKE, .leftMotor = MD_FORWARD },
+  { .state = GOING_RIGHT_1, .leftDutyCycle = 0, .rightDutyCycle = 255, .rightMotor = MD_FORWARD, .leftMotor = MD_BRAKE },
+  { .state = GOING_LEFT_1, .leftDutyCycle = 255, .rightDutyCycle = 0, .rightMotor = MD_BRAKE, .leftMotor = MD_FORWARD },
 };
 
 uint8_t prevBitMap;
@@ -87,7 +87,7 @@ uint8_t sensorBitMap;
 
 static void readAllSensors(void) {
   for (uint8_t i = 0; i < S_MAX; i++) {
-    (digitalRead(sensorGpio[i]) == LOW) ? SET_BIT(sensorBitMap, i) : CLEAR_BIT(sensorBitMap, i);
+    (digitalRead(sensorGpio[i]) == HIGH) ? SET_BIT(sensorBitMap, i) : CLEAR_BIT(sensorBitMap, i);
   }
 }
 
@@ -144,7 +144,7 @@ void handleSteering(void) {
     Serial.println(sensorBitMap);
   }
   stayOnLine(sensorBitMap);
-   prevBitMap = sensorBitMap; //FROM GPT
+  prevBitMap = sensorBitMap;
 }
 
 static void initInputs(void) {
@@ -170,6 +170,6 @@ void setup() {
 }
 
 void loop() {
-  handleSteering();  //FROM GPT
+  //handleSteering();  //FROM GPT
   // put your main code here, to run repeatedly:
 }
