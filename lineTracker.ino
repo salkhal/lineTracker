@@ -60,18 +60,18 @@ typedef struct {
 
 //fix this
 const uint8_t sensorGpio[S_MAX] = {
-  [S_RR] = 19,
-  [S_CR] = 18,
-  [S_CM] = 3,
-  [S_FM] = 2,
-  [S_CL] = 20,
-  [S_LL] = 21,
+ [S_RR] = 19,
+  [S_CR] = 21,
+  [S_CM] = 20,
+  [S_FM] = 18,
+  [S_CL] = 3,
+  [S_LL] = 2,
 };
 
 //fix this
 const motorInterface motor[] = {
-  [M_LEFT] = {4, 5},
-  [M_RIGHT] = {6, 7}
+  [M_LEFT] = {7, 5},
+  [M_RIGHT] = {4, 6}
 };
 
 const steering_table_t straightSteer[] = {
@@ -87,7 +87,7 @@ uint8_t sensorBitMap;
 
 static void readAllSensors(void) {
   for (uint8_t i = 0; i < S_MAX; i++) {
-    (digitalRead(sensorGpio) == LOW) ? SET_BIT(sensorBitMap, i) : CLEAR_BIT(sensorBitMap, i);
+    (digitalRead(sensorGpio[i]) == LOW) ? SET_BIT(sensorBitMap, i) : CLEAR_BIT(sensorBitMap, i);
   }
 }
 
@@ -119,11 +119,13 @@ static void setMotor(motorInterface motor, motorMode mode, uint8_t dutyCycle) {
 static void stayOnLine(uint8_t state) {
   steering_table_t* steer = FIND_ENTRY(straightSteer, ARRAY_SIZE(straightSteer), state, state);
 
-  setMotor(motor[M_LEFT], steer->leftMotor, steer->leftDutyCycle);
-  setMotor(motor[M_RIGHT], steer->rightMotor, steer->rightDutyCycle);
+ if (steer != NULL) {  //FROM GPT
+    setMotor(motor[M_LEFT], steer->leftMotor, steer->leftDutyCycle);
+    setMotor(motor[M_RIGHT], steer->rightMotor, steer->rightDutyCycle);
 
-  Serial.print("Steer state: ");
-  Serial.println(steer->state);
+    Serial.print("Steer state: ");
+    Serial.println(steer->state);
+  }
 }
 
 static bool makeTurn(uint8_t state, uint8_t prevState) {
@@ -142,6 +144,7 @@ void handleSteering(void) {
     Serial.println(sensorBitMap);
   }
   stayOnLine(sensorBitMap);
+   prevBitMap = sensorBitMap; //FROM GPT
 }
 
 static void initInputs(void) {
@@ -167,5 +170,6 @@ void setup() {
 }
 
 void loop() {
+  handleSteering();  //FROM GPT
   // put your main code here, to run repeatedly:
 }
