@@ -174,7 +174,7 @@ void handleSteering(void) {
   noInterrupts();
   readAllSensors();
   if (performingTurn == true) {
-    if ((sensorBitMap == ON_LINE) || (sensorBitMap == DEAD_END)) {
+    if ((sensorBitMap == ON_LINE) || (sensorBitMap == DEAD_END) || (sensorBitMap == GOING_RIGHT_0) || (sensorBitMap == GOING_RIGHT_1) || (sensorBitMap == GOING_LEFT_0) || (sensorBitMap == GOING_LEFT_1)) {
       performingTurn = false;
     }
   }
