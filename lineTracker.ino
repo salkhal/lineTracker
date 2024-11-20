@@ -39,11 +39,13 @@ typedef struct {
 #define ON_LINE (uint8_t)(BIT(S_CM) | BIT(S_FM))
 #define DEAD_END (uint8_t)(BIT(S_CM))
 
+#define GOING_RIGHT (uint8_t) BIT(S_CL)
 #define GOING_RIGHT_0 (uint8_t)(BIT(S_FM) | BIT(S_CM) | BIT(S_CL))
 #define GOING_RIGHT_1 (uint8_t)(BIT(S_CM) | BIT(S_CL))
 #define GOING_RIGHT_2 (uint8_t)(BIT(S_CL) | BIT(S_LL))
 #define GOING_RIGHT_3 (uint8_t)(BIT(S_LL))
 
+#define GOING_LEFT (uint8_t) BIT(S_CR)
 #define GOING_LEFT_0 (uint8_t)(BIT(S_FM) | BIT(S_CM) | BIT(S_CR))
 #define GOING_LEFT_1 (uint8_t)(BIT(S_CM) | BIT(S_CR))
 #define GOING_LEFT_2 (uint8_t)(BIT(S_CR) | BIT(S_RR))
@@ -75,20 +77,23 @@ const motorInterface motor[] = {
 };
 
 const steering_table_t straightSteer[] = {
-  { .state = ON_LINE, .leftDutyCycle = 75, .rightDutyCycle = 75, .rightMotor = MD_FORWARD, .leftMotor = MD_FORWARD },
-  { .state = GOING_RIGHT_0, .leftDutyCycle = 0, .rightDutyCycle = 75, .rightMotor = MD_FORWARD, .leftMotor = MD_COAST },
-  { .state = GOING_LEFT_0, .leftDutyCycle = 75, .rightDutyCycle = 0, .rightMotor = MD_COAST, .leftMotor = MD_FORWARD },
-  { .state = GOING_RIGHT_1, .leftDutyCycle = 0, .rightDutyCycle = 75, .rightMotor = MD_FORWARD, .leftMotor = MD_BRAKE },
-  { .state = GOING_LEFT_1, .leftDutyCycle = 75, .rightDutyCycle = 0, .rightMotor = MD_BRAKE, .leftMotor = MD_FORWARD },
+  { .state = ON_LINE, .leftDutyCycle = 150, .rightDutyCycle = 150, .rightMotor = MD_FORWARD, .leftMotor = MD_FORWARD },
+  { .state = GOING_RIGHT_0, .leftDutyCycle = 0, .rightDutyCycle = 150, .rightMotor = MD_FORWARD, .leftMotor = MD_COAST },
+  { .state = GOING_LEFT_0, .leftDutyCycle = 150, .rightDutyCycle = 0, .rightMotor = MD_COAST, .leftMotor = MD_FORWARD },
+  { .state = GOING_RIGHT_1, .leftDutyCycle = 0, .rightDutyCycle = 150, .rightMotor = MD_FORWARD, .leftMotor = MD_BRAKE },
+  { .state = GOING_LEFT_1, .leftDutyCycle = 150, .rightDutyCycle = 0, .rightMotor = MD_BRAKE, .leftMotor = MD_FORWARD },
+  { .state = GOING_RIGHT, .leftDutyCycle = 0, .rightDutyCycle = 150, .rightMotor = MD_FORWARD, .leftMotor = MD_BRAKE },
+  { .state = GOING_LEFT, .leftDutyCycle = 150, .rightDutyCycle = 0, .rightMotor = MD_BRAKE, .leftMotor = MD_FORWARD },
+  { .state = DEAD_END,   .leftDutyCycle = 75,  .rightDutyCycle = 75, .rightMotor = MD_FORWARD, .leftMotor = MD_FORWARD },
 };
 
 const steering_table_t steerCorner[] = {
-  { .state = GRADUAL_RIGHT_TURN, .leftDutyCycle = 60, .rightDutyCycle = 60, .rightMotor = MD_BACKWARD, .leftMotor = MD_FORWARD },
-  { .state = SHARP_RIGHT_TURN, .leftDutyCycle = 60, .rightDutyCycle = 60, .rightMotor = MD_BACKWARD, .leftMotor = MD_FORWARD },
-  { .state = SHARP_LEFT_TURN, .leftDutyCycle = 60, .rightDutyCycle = 60, .rightMotor = MD_FORWARD, .leftMotor = MD_BACKWARD },
-  { .state = GRADUAL_LEFT_TURN, .leftDutyCycle = 60, .rightDutyCycle = 60, .rightMotor = MD_FORWARD, .leftMotor = MD_BACKWARD },
-  { .state = INTERSECTION_DEAD, .leftDutyCycle = 60, .rightDutyCycle = 60, .rightMotor = MD_FORWARD, .leftMotor = MD_BACKWARD },
-  { .state = INTERSECTION_FORWARD, .leftDutyCycle = 75, .rightDutyCycle = 75, .rightMotor = MD_FORWARD, .leftMotor = MD_FORWARD },
+  { .state = GRADUAL_RIGHT_TURN, .leftDutyCycle = 100, .rightDutyCycle = 100, .rightMotor = MD_BACKWARD, .leftMotor = MD_FORWARD },
+  { .state = SHARP_RIGHT_TURN, .leftDutyCycle = 100, .rightDutyCycle = 100, .rightMotor = MD_BACKWARD, .leftMotor = MD_FORWARD },
+  { .state = SHARP_LEFT_TURN, .leftDutyCycle = 100, .rightDutyCycle = 100, .rightMotor = MD_FORWARD, .leftMotor = MD_BACKWARD },
+  { .state = GRADUAL_LEFT_TURN, .leftDutyCycle = 100, .rightDutyCycle = 100, .rightMotor = MD_FORWARD, .leftMotor = MD_BACKWARD },
+  { .state = INTERSECTION_DEAD, .leftDutyCycle = 100, .rightDutyCycle = 100, .rightMotor = MD_FORWARD, .leftMotor = MD_BACKWARD },
+  { .state = INTERSECTION_FORWARD, .leftDutyCycle = 150, .rightDutyCycle = 150, .rightMotor = MD_FORWARD, .leftMotor = MD_FORWARD },
 };
 
 uint8_t prevBitMap;
@@ -168,16 +173,21 @@ static bool performingTurn = false;
 void handleSteering(void) {
   noInterrupts();
   readAllSensors();
-  if (detectTurn(sensorBitMap, prevBitMap)) {
+  if (performingTurn == true) {
+    if ((sensorBitMap == ON_LINE) || (sensorBitMap == DEAD_END)) {
+      performingTurn = false;
+    }
+  }
+  if (!performingTurn) {
+    if (detectTurn(sensorBitMap, prevBitMap)) {
       makeTurn(sensorBitMap);
       performingTurn = true;
-      haltMotors();
     } else {
       stayOnLine(sensorBitMap);
+    }
   }
 
   prevBitMap = sensorBitMap;
-
   interrupts();
 }
 
