@@ -157,22 +157,23 @@ static bool detectTurn(uint8_t state, uint8_t prevState) {
   }
   return false;
 }
+
+void haltMotors(void) {
+  for (uint8_t i = 0; i < ARRAY_SIZE(motor); i++) {
+    digitalWrite(motor[i].ctrl0, HIGH);  // turn on pullup resistors
+    digitalWrite(motor[i].ctrl1, HIGH);  // turn on pullup resistors
+  }
+}
 static bool performingTurn = false;
 void handleSteering(void) {
   noInterrupts();
   readAllSensors();
-  if (performingTurn) {
-    if (sensorBitMap == ON_LINE) {
-      performingTurn = false;
-    }
-  }
-  if (!performingTurn) {
-    if (detectTurn(sensorBitMap, prevBitMap)) {
+  if (detectTurn(sensorBitMap, prevBitMap)) {
       makeTurn(sensorBitMap);
       performingTurn = true;
+      haltMotors();
     } else {
       stayOnLine(sensorBitMap);
-    }
   }
 
   prevBitMap = sensorBitMap;
