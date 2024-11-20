@@ -182,8 +182,10 @@ void handleSteering(void) {
     if (detectTurn(sensorBitMap, prevBitMap)) {
       makeTurn(sensorBitMap);
       performingTurn = true;
+      digitalWrite(8, HIGH);
     } else {
       stayOnLine(sensorBitMap);
+      digitalWrite(8, LOW);
     }
   }
 
@@ -210,7 +212,8 @@ static void initOutputs(void) {
 void setup() {
   initInputs();
   initOutputs();
-  Serial.begin(9600);
+  pinMode(8, OUTPUT);
+  //Serial.begin(9600);
 }
 
 void loop() {
