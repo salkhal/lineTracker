@@ -60,7 +60,7 @@ typedef struct {
 
 //fix this
 const uint8_t sensorGpio[S_MAX] = {
- [S_RR] = 19,
+  [S_RR] = 19,
   [S_CR] = 21,
   [S_CM] = 20,
   [S_FM] = 18,
@@ -70,16 +70,25 @@ const uint8_t sensorGpio[S_MAX] = {
 
 //fix this
 const motorInterface motor[] = {
-  [M_LEFT] = {7, 5},
-  [M_RIGHT] = {4, 6}
+  [M_LEFT] = { 7, 5 },
+  [M_RIGHT] = { 4, 6 }
 };
 
 const steering_table_t straightSteer[] = {
-  { .state = ON_LINE, .leftDutyCycle = 255, .rightDutyCycle = 255, .rightMotor = MD_FORWARD, .leftMotor = MD_FORWARD },
-  { .state = GOING_RIGHT_0, .leftDutyCycle = 75, .rightDutyCycle = 255, .rightMotor = MD_FORWARD, .leftMotor = MD_BRAKE },
-  { .state = GOING_LEFT_0, .leftDutyCycle = 255, .rightDutyCycle = 75, .rightMotor = MD_BRAKE, .leftMotor = MD_FORWARD },
-  { .state = GOING_RIGHT_1, .leftDutyCycle = 0, .rightDutyCycle = 255, .rightMotor = MD_FORWARD, .leftMotor = MD_BRAKE },
-  { .state = GOING_LEFT_1, .leftDutyCycle = 255, .rightDutyCycle = 0, .rightMotor = MD_BRAKE, .leftMotor = MD_FORWARD },
+  { .state = ON_LINE, .leftDutyCycle = 75, .rightDutyCycle = 75, .rightMotor = MD_FORWARD, .leftMotor = MD_FORWARD },
+  { .state = GOING_RIGHT_0, .leftDutyCycle = 0, .rightDutyCycle = 75, .rightMotor = MD_FORWARD, .leftMotor = MD_COAST },
+  { .state = GOING_LEFT_0, .leftDutyCycle = 75, .rightDutyCycle = 0, .rightMotor = MD_COAST, .leftMotor = MD_FORWARD },
+  { .state = GOING_RIGHT_1, .leftDutyCycle = 0, .rightDutyCycle = 75, .rightMotor = MD_FORWARD, .leftMotor = MD_BRAKE },
+  { .state = GOING_LEFT_1, .leftDutyCycle = 75, .rightDutyCycle = 0, .rightMotor = MD_BRAKE, .leftMotor = MD_FORWARD },
+};
+
+const steering_table_t steerCorner[] = {
+  { .state = GRADUAL_RIGHT_TURN, .leftDutyCycle = 60, .rightDutyCycle = 60, .rightMotor = MD_BACKWARD, .leftMotor = MD_FORWARD },
+  { .state = SHARP_RIGHT_TURN, .leftDutyCycle = 60, .rightDutyCycle = 60, .rightMotor = MD_BACKWARD, .leftMotor = MD_FORWARD },
+  { .state = SHARP_LEFT_TURN, .leftDutyCycle = 60, .rightDutyCycle = 60, .rightMotor = MD_FORWARD, .leftMotor = MD_BACKWARD },
+  { .state = GRADUAL_LEFT_TURN, .leftDutyCycle = 60, .rightDutyCycle = 60, .rightMotor = MD_FORWARD, .leftMotor = MD_BACKWARD },
+  { .state = INTERSECTION_DEAD, .leftDutyCycle = 60, .rightDutyCycle = 60, .rightMotor = MD_FORWARD, .leftMotor = MD_BACKWARD },
+  { .state = INTERSECTION_FORWARD, .leftDutyCycle = 75, .rightDutyCycle = 75, .rightMotor = MD_FORWARD, .leftMotor = MD_FORWARD },
 };
 
 uint8_t prevBitMap;
@@ -92,74 +101,98 @@ static void readAllSensors(void) {
 }
 
 static void setMotor(motorInterface motor, motorMode mode, uint8_t dutyCycle) {
-  switch(mode) {
+  switch (mode) {
     case MD_FORWARD:
-    analogWrite(motor.ctrl0, dutyCycle);
-    digitalWrite(motor.ctrl1, 0);
-    break;
+      analogWrite(motor.ctrl0, dutyCycle);
+      digitalWrite(motor.ctrl1, 0);
+      break;
 
     case MD_BACKWARD:
-    analogWrite(motor.ctrl1, dutyCycle);
-    digitalWrite(motor.ctrl0, 0);
-    break;
+      analogWrite(motor.ctrl1, dutyCycle);
+      digitalWrite(motor.ctrl0, 0);
+      break;
 
     case MD_COAST:
-    digitalWrite(motor.ctrl1, 0);
-    digitalWrite(motor.ctrl0, 0);
-    break;
+      digitalWrite(motor.ctrl1, 0);
+      digitalWrite(motor.ctrl0, 0);
+      break;
 
     case MD_BRAKE:
-    digitalWrite(motor.ctrl1, 1);
-    digitalWrite(motor.ctrl0, 1);
+      digitalWrite(motor.ctrl1, 1);
+      digitalWrite(motor.ctrl0, 1);
     default:
-    break;
+      break;
   }
 }
 
 static void stayOnLine(uint8_t state) {
   steering_table_t* steer = FIND_ENTRY(straightSteer, ARRAY_SIZE(straightSteer), state, state);
 
- if (steer != NULL) {  //FROM GPT
+  if (steer != NULL) {  //FROM GPT
     setMotor(motor[M_LEFT], steer->leftMotor, steer->leftDutyCycle);
     setMotor(motor[M_RIGHT], steer->rightMotor, steer->rightDutyCycle);
 
-    Serial.print("Steer state: ");
-    Serial.println(steer->state);
+    //Serial.print("Steer state: ");
+    //Serial.println(steer->state);
   }
 }
 
-static bool makeTurn(uint8_t state, uint8_t prevState) {
+static void makeTurn(uint8_t state) {
+  steering_table_t* steer = FIND_ENTRY(steerCorner, ARRAY_SIZE(steerCorner), state, state);
+
+  if (steer != NULL) {  //FROM GPT
+    setMotor(motor[M_LEFT], steer->leftMotor, steer->leftDutyCycle);
+    setMotor(motor[M_RIGHT], steer->rightMotor, steer->rightDutyCycle);
+
+    //Serial.print("Steer state: ");
+    //Serial.println(steer->state);
+  }
+}
+
+static bool detectTurn(uint8_t state, uint8_t prevState) {
   if ((prevState == ON_LINE) || (prevState == GOING_RIGHT_0) || (prevState == GOING_LEFT_0)) {
-    if ((state == SHARP_RIGHT_TURN) || (state == GRADUAL_RIGHT_TURN) || (state == SHARP_LEFT_TURN) || (state == GRADUAL_LEFT_TURN) || (state == INTERSECTION_DEAD)) {
+    if ((state == SHARP_RIGHT_TURN) || (state == GRADUAL_RIGHT_TURN) || (state == SHARP_LEFT_TURN) || (state == GRADUAL_LEFT_TURN) || (state == INTERSECTION_DEAD) || (state == DEAD_END)) {
       return true;
     }
   }
   return false;
 }
-
+static bool performingTurn = false;
 void handleSteering(void) {
+  noInterrupts();
   readAllSensors();
-  if(makeTurn(sensorBitMap, prevBitMap)) {
-    Serial.print("turn detected: ");
-    Serial.println(sensorBitMap);
+  if (performingTurn) {
+    if (sensorBitMap == ON_LINE) {
+      performingTurn = false;
+    }
   }
-  stayOnLine(sensorBitMap);
+  if (!performingTurn) {
+    if (detectTurn(sensorBitMap, prevBitMap)) {
+      makeTurn(sensorBitMap);
+      performingTurn = true;
+    } else {
+      stayOnLine(sensorBitMap);
+    }
+  }
+
   prevBitMap = sensorBitMap;
+
+  interrupts();
 }
 
 static void initInputs(void) {
-  for(uint8_t i = 0; i < ARRAY_SIZE(sensorGpio); i++) {
-      pinMode(sensorGpio[i], INPUT_PULLUP); // Interrupt source 1
-      attachInterrupt(digitalPinToInterrupt(sensorGpio[i]), handleSteering, CHANGE);
+  for (uint8_t i = 0; i < ARRAY_SIZE(sensorGpio); i++) {
+    pinMode(sensorGpio[i], INPUT_PULLUP);  // Interrupt source 1
+    attachInterrupt(digitalPinToInterrupt(sensorGpio[i]), handleSteering, CHANGE);
   }
 }
 
 static void initOutputs(void) {
-  for(uint8_t i = 0; i < ARRAY_SIZE(motor); i++) {
-      pinMode(motor[i].ctrl0, OUTPUT);     // set pin to output
-      digitalWrite(motor[i].ctrl0, LOW);   // turn on pullup resistors
-      pinMode(motor[i].ctrl1, OUTPUT);     // set pin to output
-      digitalWrite(motor[i].ctrl1, LOW);   // turn on pullup resistors
+  for (uint8_t i = 0; i < ARRAY_SIZE(motor); i++) {
+    pinMode(motor[i].ctrl0, OUTPUT);    // set pin to output
+    digitalWrite(motor[i].ctrl0, LOW);  // turn on pullup resistors
+    pinMode(motor[i].ctrl1, OUTPUT);    // set pin to output
+    digitalWrite(motor[i].ctrl1, LOW);  // turn on pullup resistors
   }
 }
 
