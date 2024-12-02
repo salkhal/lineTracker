@@ -119,9 +119,7 @@ static void readAllSensors(void) {
 }
 
 static void setMotor(motorInterface motor, motorMode mode, uint8_t dutyCycle) {
-        digitalWrite(motor.ctrl1, 0);
-      digitalWrite(motor.ctrl0, 0);
-      return;
+
   switch (mode) {
     case MD_FORWARD:
       analogWrite(motor.ctrl0, dutyCycle);
