@@ -53,9 +53,11 @@ typedef struct {
 
 #define SHARP_RIGHT_TURN (uint8_t)(BIT(S_CM) | BIT(S_RR))
 #define GRADUAL_RIGHT_TURN (uint8_t)(BIT(S_CM) | BIT(S_CR) | BIT(S_RR))
+#define GRADUAL_RIGHT_TURN_OP (uint8_t)(BIT(S_CL) | BIT(S_CM) | BIT(S_CR) | BIT(S_RR))
 
 #define SHARP_LEFT_TURN (uint8_t)(BIT(S_CM) | BIT(S_LL))
 #define GRADUAL_LEFT_TURN (uint8_t)(BIT(S_CM) | BIT(S_CL) | BIT(S_LL))
+#define GRADUAL_LEFT_TURN_OP (uint8_t)(BIT(S_CR) | BIT(S_CM) | BIT(S_CL) | BIT(S_LL))
 
 #define INTERSECTION_DEAD (uint8_t)(BIT(S_LL) | BIT(S_CL) | BIT(S_CM) | BIT(S_CR) | BIT(S_RR))
 #define INTERSECTION_FORWARD (uint8_t)(BIT(S_LL) | BIT(S_CL) | BIT(S_FM) | BIT(S_CM) | BIT(S_CR) | BIT(S_RR))
@@ -85,6 +87,13 @@ const steering_table_t straightSteer[] = {
   { .state = GOING_RIGHT, .leftDutyCycle = 0, .rightDutyCycle = 150, .rightMotor = MD_FORWARD, .leftMotor = MD_BRAKE },
   { .state = GOING_LEFT, .leftDutyCycle = 150, .rightDutyCycle = 0, .rightMotor = MD_BRAKE, .leftMotor = MD_FORWARD },
   { .state = DEAD_END,   .leftDutyCycle = 75,  .rightDutyCycle = 75, .rightMotor = MD_FORWARD, .leftMotor = MD_FORWARD },
+  { .state = INTERSECTION_DEAD, .leftDutyCycle = 100, .rightDutyCycle = 100, .rightMotor = MD_FORWARD, .leftMotor = MD_BACKWARD },
+  { .state = SHARP_RIGHT_TURN, .leftDutyCycle = 100, .rightDutyCycle = 100, .rightMotor = MD_BACKWARD, .leftMotor = MD_FORWARD },
+  { .state = GRADUAL_RIGHT_TURN, .leftDutyCycle = 100, .rightDutyCycle = 100, .rightMotor = MD_BACKWARD, .leftMotor = MD_FORWARD },
+  { .state = GRADUAL_RIGHT_TURN_OP, .leftDutyCycle = 100, .rightDutyCycle = 100, .rightMotor = MD_BACKWARD, .leftMotor = MD_FORWARD },
+  { .state = SHARP_LEFT_TURN, .leftDutyCycle = 100, .rightDutyCycle = 100, .rightMotor = MD_FORWARD, .leftMotor = MD_BACKWARD },
+  { .state = GRADUAL_LEFT_TURN, .leftDutyCycle = 100, .rightDutyCycle = 100, .rightMotor = MD_FORWARD, .leftMotor = MD_BACKWARD },
+  { .state = GRADUAL_LEFT_TURN_OP, .leftDutyCycle = 100, .rightDutyCycle = 100, .rightMotor = MD_FORWARD, .leftMotor = MD_BACKWARD },
 };
 
 const steering_table_t steerCorner[] = {
@@ -173,7 +182,7 @@ static bool performingTurn = false;
 void handleSteering(void) {
   noInterrupts();
   readAllSensors();
-  if (performingTurn == true) {
+  /*if (performingTurn == true) {
     if ((sensorBitMap == ON_LINE) || (sensorBitMap == DEAD_END) || (sensorBitMap == GOING_RIGHT_0) || (sensorBitMap == GOING_RIGHT_1) || (sensorBitMap == GOING_LEFT_0) || (sensorBitMap == GOING_LEFT_1)) {
       performingTurn = false;
     }
@@ -190,7 +199,8 @@ void handleSteering(void) {
   }
 
   prevBitMap = sensorBitMap;
-  interrupts();
+  interrupts();*/
+  stayOnLine(sensorBitMap);
 }
 
 static void initInputs(void) {
