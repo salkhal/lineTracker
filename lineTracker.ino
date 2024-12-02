@@ -115,6 +115,9 @@ static void readAllSensors(void) {
 }
 
 static void setMotor(motorInterface motor, motorMode mode, uint8_t dutyCycle) {
+        digitalWrite(motor.ctrl1, 0);
+      digitalWrite(motor.ctrl0, 0);
+      return;
   switch (mode) {
     case MD_FORWARD:
       analogWrite(motor.ctrl0, dutyCycle);
@@ -182,6 +185,7 @@ static bool performingTurn = false;
 void handleSteering(void) {
   noInterrupts();
   readAllSensors();
+  //Serial.println(sensorGpio);
   /*if (performingTurn == true) {
     if ((sensorBitMap == ON_LINE) || (sensorBitMap == DEAD_END) || (sensorBitMap == GOING_RIGHT_0) || (sensorBitMap == GOING_RIGHT_1) || (sensorBitMap == GOING_LEFT_0) || (sensorBitMap == GOING_LEFT_1)) {
       performingTurn = false;
@@ -201,13 +205,13 @@ void handleSteering(void) {
   prevBitMap = sensorBitMap;
   interrupts();*/
   stayOnLine(sensorBitMap);
-  interrupts()
+  interrupts();
 }
 
 static void initInputs(void) {
   for (uint8_t i = 0; i < ARRAY_SIZE(sensorGpio); i++) {
     pinMode(sensorGpio[i], INPUT_PULLUP);  // Interrupt source 1
-    attachInterrupt(digitalPinToInterrupt(sensorGpio[i]), handleSteering, CHANGE);
+    //attachInterrupt(digitalPinToInterrupt(sensorGpio[i]), handleSteering, CHANGE);
   }
 }
 
@@ -224,10 +228,11 @@ void setup() {
   initInputs();
   initOutputs();
   pinMode(8, OUTPUT);
-  //Serial.begin(9600);
+  Serial.begin(9600);
 }
 
 void loop() {
-  //handleSteering();  //FROM GPT
+  handleSteering();  //FROM GPT
+    Serial.print(sensorBitMap);
   // put your main code here, to run repeatedly:
 }
