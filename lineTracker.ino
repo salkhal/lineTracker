@@ -97,15 +97,15 @@ const steering_table_t straightSteer[] = {
   { .state = GOING_LEFT_3, .leftDutyCycle = SPEED(40), .rightDutyCycle = 0, .rightMotor = MD_BRAKE, .leftMotor = MD_FORWARD },
   
   { .state = DEAD_END,   .leftDutyCycle = 75,  .rightDutyCycle = 75, .rightMotor = MD_FORWARD, .leftMotor = MD_FORWARD },
-  { .state = INTERSECTION_DEAD, .leftDutyCycle = SPEED(25), .rightDutyCycle = SPEED(25), .rightMotor = MD_FORWARD, .leftMotor = MD_BACKWARD },
+  { .state = INTERSECTION_DEAD, .leftDutyCycle = SPEED(30), .rightDutyCycle = SPEED(30), .rightMotor = MD_FORWARD, .leftMotor = MD_BACKWARD },
 
-  { .state = SHARP_RIGHT_TURN, .leftDutyCycle = SPEED(35), .rightDutyCycle = SPEED(25), .rightMotor = MD_BACKWARD, .leftMotor = MD_FORWARD },
-  { .state = GRADUAL_RIGHT_TURN, .leftDutyCycle = SPEED(35), .rightDutyCycle = SPEED(25), .rightMotor = MD_BACKWARD, .leftMotor = MD_FORWARD },
-  { .state = GRADUAL_RIGHT_TURN_OP, .leftDutyCycle = SPEED(35), .rightDutyCycle = SPEED(25), .rightMotor = MD_BACKWARD, .leftMotor = MD_FORWARD },
+  { .state = SHARP_RIGHT_TURN, .leftDutyCycle = SPEED(30), .rightDutyCycle = SPEED(30), .rightMotor = MD_BACKWARD, .leftMotor = MD_FORWARD },
+  { .state = GRADUAL_RIGHT_TURN, .leftDutyCycle = SPEED(30), .rightDutyCycle = SPEED(30), .rightMotor = MD_BACKWARD, .leftMotor = MD_FORWARD },
+  { .state = GRADUAL_RIGHT_TURN_OP, .leftDutyCycle = SPEED(30), .rightDutyCycle = SPEED(30), .rightMotor = MD_BACKWARD, .leftMotor = MD_FORWARD },
 
-  { .state = SHARP_LEFT_TURN, .leftDutyCycle = SPEED(25), .rightDutyCycle = SPEED(35), .rightMotor = MD_FORWARD, .leftMotor = MD_BACKWARD },
-  { .state = GRADUAL_LEFT_TURN, .leftDutyCycle = SPEED(25), .rightDutyCycle = SPEED(35), .rightMotor = MD_FORWARD, .leftMotor = MD_BACKWARD },
-  { .state = GRADUAL_LEFT_TURN_OP, .leftDutyCycle = SPEED(25), .rightDutyCycle = SPEED(35), .rightMotor = MD_FORWARD, .leftMotor = MD_BACKWARD },
+  { .state = SHARP_LEFT_TURN, .leftDutyCycle = SPEED(30), .rightDutyCycle = SPEED(30), .rightMotor = MD_FORWARD, .leftMotor = MD_BACKWARD },
+  { .state = GRADUAL_LEFT_TURN, .leftDutyCycle = SPEED(30), .rightDutyCycle = SPEED(30), .rightMotor = MD_FORWARD, .leftMotor = MD_BACKWARD },
+  { .state = GRADUAL_LEFT_TURN_OP, .leftDutyCycle = SPEED(30), .rightDutyCycle = SPEED(30), .rightMotor = MD_FORWARD, .leftMotor = MD_BACKWARD },
 };
 
 uint8_t prevBitMap;
@@ -149,7 +149,7 @@ static bool stayOnLine(uint8_t state) {
   if (steer != NULL) {  //FROM GPT
     setMotor(motor[M_LEFT], steer->leftMotor, steer->leftDutyCycle);
     setMotor(motor[M_RIGHT], steer->rightMotor, steer->rightDutyCycle);
-    if(steer->state != ON_LINE) {
+    if(steer->state != ON_LINE && steer->state != DEAD_END) {
       prevBitMap = state;
     }
     return true; 
