@@ -106,7 +106,7 @@ const steering_table_t steerCorner[] = {
 };
 
 uint8_t prevBitMap;
-uint8_t sensorBitMap = 0;
+static uint8_t sensorBitMap = 0;
 
 static void readAllSensors(void) {
   for (uint8_t i = 0; i < S_MAX; i++) {
