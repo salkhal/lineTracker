@@ -1,5 +1,7 @@
 #include "utils.h"
 
+#define SPEED(X) (X*255)
+
 typedef enum {
   S_RR,
   S_CR,
@@ -79,31 +81,31 @@ const motorInterface motor[] = {
 };
 
 const steering_table_t straightSteer[] = {
-  { .state = ON_LINE, .leftDutyCycle = 150, .rightDutyCycle = 150, .rightMotor = MD_FORWARD, .leftMotor = MD_FORWARD },
+  { .state = ON_LINE, .leftDutyCycle = SPEED(40), .rightDutyCycle = SPEED(40), .rightMotor = MD_FORWARD, .leftMotor = MD_FORWARD },
 
-  { .state = GOING_RIGHT, .leftDutyCycle = 0, .rightDutyCycle = 150, .rightMotor = MD_FORWARD, .leftMotor = MD_BRAKE },
-  { .state = GOING_LEFT, .leftDutyCycle = 150, .rightDutyCycle = 0, .rightMotor = MD_BRAKE, .leftMotor = MD_FORWARD },
+  { .state = GOING_RIGHT, .leftDutyCycle = 0, .rightDutyCycle = SPEED(40), .rightMotor = MD_FORWARD, .leftMotor = MD_BRAKE },
+  { .state = GOING_LEFT, .leftDutyCycle = SPEED(40), .rightDutyCycle = 0, .rightMotor = MD_BRAKE, .leftMotor = MD_FORWARD },
 
-  { .state = GOING_RIGHT_0, .leftDutyCycle = 0, .rightDutyCycle = 150, .rightMotor = MD_FORWARD, .leftMotor = MD_COAST },
-  { .state = GOING_RIGHT_1, .leftDutyCycle = 0, .rightDutyCycle = 150, .rightMotor = MD_FORWARD, .leftMotor = MD_BRAKE },
-  { .state = GOING_RIGHT_2, .leftDutyCycle = 0, .rightDutyCycle = 150, .rightMotor = MD_FORWARD, .leftMotor = MD_BRAKE },
-  { .state = GOING_RIGHT_3, .leftDutyCycle = 0, .rightDutyCycle = 150, .rightMotor = MD_FORWARD, .leftMotor = MD_BRAKE },
+  { .state = GOING_RIGHT_0, .leftDutyCycle = 0, .rightDutyCycle = SPEED(40), .rightMotor = MD_FORWARD, .leftMotor = MD_COAST },
+  { .state = GOING_RIGHT_1, .leftDutyCycle = 0, .rightDutyCycle = SPEED(40), .rightMotor = MD_FORWARD, .leftMotor = MD_BRAKE },
+  { .state = GOING_RIGHT_2, .leftDutyCycle = 0, .rightDutyCycle = SPEED(40), .rightMotor = MD_FORWARD, .leftMotor = MD_BRAKE },
+  { .state = GOING_RIGHT_3, .leftDutyCycle = 0, .rightDutyCycle = SPEED(40), .rightMotor = MD_FORWARD, .leftMotor = MD_BRAKE },
 
-    { .state = GOING_LEFT_0, .leftDutyCycle = 150, .rightDutyCycle = 0, .rightMotor = MD_COAST, .leftMotor = MD_FORWARD },
-  { .state = GOING_LEFT_1, .leftDutyCycle = 150, .rightDutyCycle = 0, .rightMotor = MD_BRAKE, .leftMotor = MD_FORWARD },
-  { .state = GOING_LEFT_2, .leftDutyCycle = 150, .rightDutyCycle = 0, .rightMotor = MD_BRAKE, .leftMotor = MD_FORWARD },
-  { .state = GOING_LEFT_3, .leftDutyCycle = 150, .rightDutyCycle = 0, .rightMotor = MD_BRAKE, .leftMotor = MD_FORWARD },
+  { .state = GOING_LEFT_0, .leftDutyCycle = SPEED(40), .rightDutyCycle = 0, .rightMotor = MD_COAST, .leftMotor = MD_FORWARD },
+  { .state = GOING_LEFT_1, .leftDutyCycle = SPEED(40), .rightDutyCycle = 0, .rightMotor = MD_BRAKE, .leftMotor = MD_FORWARD },
+  { .state = GOING_LEFT_2, .leftDutyCycle = SPEED(40), .rightDutyCycle = 0, .rightMotor = MD_BRAKE, .leftMotor = MD_FORWARD },
+  { .state = GOING_LEFT_3, .leftDutyCycle = SPEED(40), .rightDutyCycle = 0, .rightMotor = MD_BRAKE, .leftMotor = MD_FORWARD },
   
   { .state = DEAD_END,   .leftDutyCycle = 75,  .rightDutyCycle = 75, .rightMotor = MD_FORWARD, .leftMotor = MD_FORWARD },
-  { .state = INTERSECTION_DEAD, .leftDutyCycle = 100, .rightDutyCycle = 100, .rightMotor = MD_FORWARD, .leftMotor = MD_BACKWARD },
+  { .state = INTERSECTION_DEAD, .leftDutyCycle = SPEED(25), .rightDutyCycle = SPEED(25), .rightMotor = MD_FORWARD, .leftMotor = MD_BACKWARD },
 
-  { .state = SHARP_RIGHT_TURN, .leftDutyCycle = 100, .rightDutyCycle = 100, .rightMotor = MD_BACKWARD, .leftMotor = MD_FORWARD },
-  { .state = GRADUAL_RIGHT_TURN, .leftDutyCycle = 100, .rightDutyCycle = 100, .rightMotor = MD_BACKWARD, .leftMotor = MD_FORWARD },
-  { .state = GRADUAL_RIGHT_TURN_OP, .leftDutyCycle = 100, .rightDutyCycle = 100, .rightMotor = MD_BACKWARD, .leftMotor = MD_FORWARD },
+  { .state = SHARP_RIGHT_TURN, .leftDutyCycle = SPEED(35), .rightDutyCycle = SPEED(25), .rightMotor = MD_BACKWARD, .leftMotor = MD_FORWARD },
+  { .state = GRADUAL_RIGHT_TURN, .leftDutyCycle = SPEED(35), .rightDutyCycle = SPEED(25), .rightMotor = MD_BACKWARD, .leftMotor = MD_FORWARD },
+  { .state = GRADUAL_RIGHT_TURN_OP, .leftDutyCycle = SPEED(35), .rightDutyCycle = SPEED(25), .rightMotor = MD_BACKWARD, .leftMotor = MD_FORWARD },
 
-  { .state = SHARP_LEFT_TURN, .leftDutyCycle = 100, .rightDutyCycle = 100, .rightMotor = MD_FORWARD, .leftMotor = MD_BACKWARD },
-  { .state = GRADUAL_LEFT_TURN, .leftDutyCycle = 100, .rightDutyCycle = 100, .rightMotor = MD_FORWARD, .leftMotor = MD_BACKWARD },
-  { .state = GRADUAL_LEFT_TURN_OP, .leftDutyCycle = 100, .rightDutyCycle = 100, .rightMotor = MD_FORWARD, .leftMotor = MD_BACKWARD },
+  { .state = SHARP_LEFT_TURN, .leftDutyCycle = SPEED(25), .rightDutyCycle = SPEED(35), .rightMotor = MD_FORWARD, .leftMotor = MD_BACKWARD },
+  { .state = GRADUAL_LEFT_TURN, .leftDutyCycle = SPEED(25), .rightDutyCycle = SPEED(35), .rightMotor = MD_FORWARD, .leftMotor = MD_BACKWARD },
+  { .state = GRADUAL_LEFT_TURN_OP, .leftDutyCycle = SPEED(25), .rightDutyCycle = SPEED(35), .rightMotor = MD_FORWARD, .leftMotor = MD_BACKWARD },
 };
 
 uint8_t prevBitMap;
