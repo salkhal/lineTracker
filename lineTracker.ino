@@ -233,6 +233,6 @@ void setup() {
 
 void loop() {
   handleSteering();  //FROM GPT
-    Serial.print(sensorBitMap, HEX);
+    Serial.println(sensorBitMap, HEX);
   // put your main code here, to run repeatedly:
 }
