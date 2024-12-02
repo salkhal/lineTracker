@@ -80,33 +80,30 @@ const motorInterface motor[] = {
 
 const steering_table_t straightSteer[] = {
   { .state = ON_LINE, .leftDutyCycle = 150, .rightDutyCycle = 150, .rightMotor = MD_FORWARD, .leftMotor = MD_FORWARD },
+
+  { .state = GOING_RIGHT, .leftDutyCycle = 0, .rightDutyCycle = 150, .rightMotor = MD_FORWARD, .leftMotor = MD_BRAKE },
+  { .state = GOING_LEFT, .leftDutyCycle = 150, .rightDutyCycle = 0, .rightMotor = MD_BRAKE, .leftMotor = MD_FORWARD },
+
   { .state = GOING_RIGHT_0, .leftDutyCycle = 0, .rightDutyCycle = 150, .rightMotor = MD_FORWARD, .leftMotor = MD_COAST },
-  { .state = GOING_LEFT_0, .leftDutyCycle = 150, .rightDutyCycle = 0, .rightMotor = MD_COAST, .leftMotor = MD_FORWARD },
   { .state = GOING_RIGHT_1, .leftDutyCycle = 0, .rightDutyCycle = 150, .rightMotor = MD_FORWARD, .leftMotor = MD_BRAKE },
   { .state = GOING_RIGHT_2, .leftDutyCycle = 0, .rightDutyCycle = 150, .rightMotor = MD_FORWARD, .leftMotor = MD_BRAKE },
   { .state = GOING_RIGHT_3, .leftDutyCycle = 0, .rightDutyCycle = 150, .rightMotor = MD_FORWARD, .leftMotor = MD_BRAKE },
+
+    { .state = GOING_LEFT_0, .leftDutyCycle = 150, .rightDutyCycle = 0, .rightMotor = MD_COAST, .leftMotor = MD_FORWARD },
   { .state = GOING_LEFT_1, .leftDutyCycle = 150, .rightDutyCycle = 0, .rightMotor = MD_BRAKE, .leftMotor = MD_FORWARD },
   { .state = GOING_LEFT_2, .leftDutyCycle = 150, .rightDutyCycle = 0, .rightMotor = MD_BRAKE, .leftMotor = MD_FORWARD },
   { .state = GOING_LEFT_3, .leftDutyCycle = 150, .rightDutyCycle = 0, .rightMotor = MD_BRAKE, .leftMotor = MD_FORWARD },
-  { .state = GOING_RIGHT, .leftDutyCycle = 0, .rightDutyCycle = 150, .rightMotor = MD_FORWARD, .leftMotor = MD_BRAKE },
-  { .state = GOING_LEFT, .leftDutyCycle = 150, .rightDutyCycle = 0, .rightMotor = MD_BRAKE, .leftMotor = MD_FORWARD },
+  
   { .state = DEAD_END,   .leftDutyCycle = 75,  .rightDutyCycle = 75, .rightMotor = MD_FORWARD, .leftMotor = MD_FORWARD },
   { .state = INTERSECTION_DEAD, .leftDutyCycle = 100, .rightDutyCycle = 100, .rightMotor = MD_FORWARD, .leftMotor = MD_BACKWARD },
+
   { .state = SHARP_RIGHT_TURN, .leftDutyCycle = 100, .rightDutyCycle = 100, .rightMotor = MD_BACKWARD, .leftMotor = MD_FORWARD },
   { .state = GRADUAL_RIGHT_TURN, .leftDutyCycle = 100, .rightDutyCycle = 100, .rightMotor = MD_BACKWARD, .leftMotor = MD_FORWARD },
   { .state = GRADUAL_RIGHT_TURN_OP, .leftDutyCycle = 100, .rightDutyCycle = 100, .rightMotor = MD_BACKWARD, .leftMotor = MD_FORWARD },
+
   { .state = SHARP_LEFT_TURN, .leftDutyCycle = 100, .rightDutyCycle = 100, .rightMotor = MD_FORWARD, .leftMotor = MD_BACKWARD },
   { .state = GRADUAL_LEFT_TURN, .leftDutyCycle = 100, .rightDutyCycle = 100, .rightMotor = MD_FORWARD, .leftMotor = MD_BACKWARD },
   { .state = GRADUAL_LEFT_TURN_OP, .leftDutyCycle = 100, .rightDutyCycle = 100, .rightMotor = MD_FORWARD, .leftMotor = MD_BACKWARD },
-};
-
-const steering_table_t steerCorner[] = {
-  { .state = GRADUAL_RIGHT_TURN, .leftDutyCycle = 100, .rightDutyCycle = 100, .rightMotor = MD_BACKWARD, .leftMotor = MD_FORWARD },
-  { .state = SHARP_RIGHT_TURN, .leftDutyCycle = 100, .rightDutyCycle = 100, .rightMotor = MD_BACKWARD, .leftMotor = MD_FORWARD },
-  { .state = SHARP_LEFT_TURN, .leftDutyCycle = 100, .rightDutyCycle = 100, .rightMotor = MD_FORWARD, .leftMotor = MD_BACKWARD },
-  { .state = GRADUAL_LEFT_TURN, .leftDutyCycle = 100, .rightDutyCycle = 100, .rightMotor = MD_FORWARD, .leftMotor = MD_BACKWARD },
-  { .state = INTERSECTION_DEAD, .leftDutyCycle = 100, .rightDutyCycle = 100, .rightMotor = MD_FORWARD, .leftMotor = MD_BACKWARD },
-  { .state = INTERSECTION_FORWARD, .leftDutyCycle = 150, .rightDutyCycle = 150, .rightMotor = MD_FORWARD, .leftMotor = MD_FORWARD },
 };
 
 uint8_t prevBitMap;
@@ -144,28 +141,18 @@ static void setMotor(motorInterface motor, motorMode mode, uint8_t dutyCycle) {
   }
 }
 
-static void stayOnLine(uint8_t state) {
+static bool stayOnLine(uint8_t state) {
   steering_table_t* steer = FIND_ENTRY(straightSteer, ARRAY_SIZE(straightSteer), state, state);
 
   if (steer != NULL) {  //FROM GPT
     setMotor(motor[M_LEFT], steer->leftMotor, steer->leftDutyCycle);
     setMotor(motor[M_RIGHT], steer->rightMotor, steer->rightDutyCycle);
-
-    //Serial.print("Steer state: ");
-    //Serial.println(steer->state);
+    if(steer->state != ON_LINE) {
+      prevBitMap = state;
+    }
+    return true; 
   }
-}
-
-static void makeTurn(uint8_t state) {
-  steering_table_t* steer = FIND_ENTRY(steerCorner, ARRAY_SIZE(steerCorner), state, state);
-
-  if (steer != NULL) {  //FROM GPT
-    setMotor(motor[M_LEFT], steer->leftMotor, steer->leftDutyCycle);
-    setMotor(motor[M_RIGHT], steer->rightMotor, steer->rightDutyCycle);
-
-    //Serial.print("Steer state: ");
-    //Serial.println(steer->state);
-  }
+  return false;
 }
 
 static bool detectTurn(uint8_t state, uint8_t prevState) {
@@ -206,7 +193,9 @@ void handleSteering(void) {
 
   prevBitMap = sensorBitMap;
   interrupts();*/
-  stayOnLine(sensorBitMap);
+  if(!stayOnLine(sensorBitMap)) {
+    stayOnLine(prevBitMap);
+  }
   interrupts();
 }
 
