@@ -106,11 +106,11 @@ const steering_table_t steerCorner[] = {
 };
 
 uint8_t prevBitMap;
-uint8_t sensorBitMap;
+uint8_t sensorBitMap = 0;
 
 static void readAllSensors(void) {
   for (uint8_t i = 0; i < S_MAX; i++) {
-    (digitalRead(sensorGpio[i]) == HIGH) ? SET_BIT(sensorBitMap, i) : CLEAR_BIT(sensorBitMap, i);
+    (digitalRead(sensorGpio[i]) == LOW) ? SET_BIT(sensorBitMap, i) : CLEAR_BIT(sensorBitMap, i);
   }
 }
 
