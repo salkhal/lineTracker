@@ -1,6 +1,6 @@
 #include "utils.h"
 
-#define SPEED(X) (X*255)
+#define SPEED(X) (X*2.55)
 
 typedef enum {
   S_RR,
