@@ -201,6 +201,7 @@ void handleSteering(void) {
   prevBitMap = sensorBitMap;
   interrupts();*/
   stayOnLine(sensorBitMap);
+  interrupts()
 }
 
 static void initInputs(void) {
