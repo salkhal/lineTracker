@@ -35,7 +35,7 @@ typedef struct {
   motorMode leftMotor;
 } steering_table_t;
 
-#define UNKNOW (uint8_t)0x00
+#define UNKNOWN (uint8_t)0x00
 #define ON_LINE (uint8_t)(BIT(S_CM) | BIT(S_FM))
 #define DEAD_END (uint8_t)(BIT(S_CM))
 
@@ -83,7 +83,11 @@ const steering_table_t straightSteer[] = {
   { .state = GOING_RIGHT_0, .leftDutyCycle = 0, .rightDutyCycle = 150, .rightMotor = MD_FORWARD, .leftMotor = MD_COAST },
   { .state = GOING_LEFT_0, .leftDutyCycle = 150, .rightDutyCycle = 0, .rightMotor = MD_COAST, .leftMotor = MD_FORWARD },
   { .state = GOING_RIGHT_1, .leftDutyCycle = 0, .rightDutyCycle = 150, .rightMotor = MD_FORWARD, .leftMotor = MD_BRAKE },
+  { .state = GOING_RIGHT_2, .leftDutyCycle = 0, .rightDutyCycle = 150, .rightMotor = MD_FORWARD, .leftMotor = MD_BRAKE },
+  { .state = GOING_RIGHT_3, .leftDutyCycle = 0, .rightDutyCycle = 150, .rightMotor = MD_FORWARD, .leftMotor = MD_BRAKE },
   { .state = GOING_LEFT_1, .leftDutyCycle = 150, .rightDutyCycle = 0, .rightMotor = MD_BRAKE, .leftMotor = MD_FORWARD },
+  { .state = GOING_LEFT_2, .leftDutyCycle = 150, .rightDutyCycle = 0, .rightMotor = MD_BRAKE, .leftMotor = MD_FORWARD },
+  { .state = GOING_LEFT_3, .leftDutyCycle = 150, .rightDutyCycle = 0, .rightMotor = MD_BRAKE, .leftMotor = MD_FORWARD },
   { .state = GOING_RIGHT, .leftDutyCycle = 0, .rightDutyCycle = 150, .rightMotor = MD_FORWARD, .leftMotor = MD_BRAKE },
   { .state = GOING_LEFT, .leftDutyCycle = 150, .rightDutyCycle = 0, .rightMotor = MD_BRAKE, .leftMotor = MD_FORWARD },
   { .state = DEAD_END,   .leftDutyCycle = 75,  .rightDutyCycle = 75, .rightMotor = MD_FORWARD, .leftMotor = MD_FORWARD },
@@ -211,7 +215,7 @@ void handleSteering(void) {
 static void initInputs(void) {
   for (uint8_t i = 0; i < ARRAY_SIZE(sensorGpio); i++) {
     pinMode(sensorGpio[i], INPUT_PULLUP);  // Interrupt source 1
-    //attachInterrupt(digitalPinToInterrupt(sensorGpio[i]), handleSteering, CHANGE);
+    attachInterrupt(digitalPinToInterrupt(sensorGpio[i]), handleSteering, CHANGE);
   }
 }
 
@@ -232,7 +236,7 @@ void setup() {
 }
 
 void loop() {
-  handleSteering();  //FROM GPT
-    Serial.println(sensorBitMap, HEX);
+  //handleSteering();  //FROM GPT
+  //Serial.println(sensorBitMap, HEX);
   // put your main code here, to run repeatedly:
 }
