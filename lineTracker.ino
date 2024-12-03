@@ -90,7 +90,7 @@ bool waitForStraightLineORLeft(uint8_t currentState) {
   if((currentState == ON_LINE) || (currentState == DEAD_END) || (currentState == GOING_LEFT)) {
     ret = true;
   }
-  return true;
+  return ret;
 }
 
 bool waitForStraightLineORRight(uint8_t currentState) {
@@ -99,7 +99,7 @@ bool waitForStraightLineORRight(uint8_t currentState) {
   if((currentState == ON_LINE) || (currentState == DEAD_END) || (currentState == GOING_RIGHT)) {
     ret = true;
   }
-  return true;
+  return ret;
 }
 
 const steering_table_t straightSteer[] = {
