@@ -104,6 +104,26 @@ bool waitForStraightLineORRight(uint8_t currentState) {
   return ret;
 }
 
+bool handleRightOp(uint8_t currentState) {
+  bool ret = false;
+
+  if((currentState == ON_LINE) || (currentState == GOING_RIGHT)) {
+    ret = true;
+    delay(1500);
+  }
+  return ret;
+}
+
+bool handleLeftOp(uint8_t currentState) {
+  bool ret = false;
+
+  if((currentState == ON_LINE) || (currentState == GOING_LEFT)) {
+    ret = true;
+    delay(1500);
+  }
+  return ret;
+}
+
 const steering_table_t straightSteer[] = {
   { .state = ON_LINE, .leftDutyCycle = SPEED(45), .rightDutyCycle = SPEED(45), .rightMotor = MD_FORWARD, .leftMotor = MD_FORWARD, NULL},
 
@@ -125,11 +145,11 @@ const steering_table_t straightSteer[] = {
 
   { .state = SHARP_RIGHT_TURN, .leftDutyCycle = SPEED(35), .rightDutyCycle = SPEED(35), .rightMotor = MD_BACKWARD, .leftMotor = MD_FORWARD, waitForStraightLineORRight },
   { .state = GRADUAL_RIGHT_TURN, .leftDutyCycle = SPEED(35), .rightDutyCycle = SPEED(35), .rightMotor = MD_BACKWARD, .leftMotor = MD_FORWARD, waitForStraightLineORRight },
-  { .state = GRADUAL_RIGHT_TURN_OP, .leftDutyCycle = SPEED(35), .rightDutyCycle = SPEED(35), .rightMotor = MD_BACKWARD, .leftMotor = MD_FORWARD, waitForStraightLineORRight },
+  { .state = GRADUAL_RIGHT_TURN_OP, .leftDutyCycle = SPEED(35), .rightDutyCycle = SPEED(35), .rightMotor = MD_BACKWARD, .leftMotor = MD_FORWARD, handleRightOp },
 
   { .state = SHARP_LEFT_TURN, .leftDutyCycle = SPEED(35), .rightDutyCycle = SPEED(35), .rightMotor = MD_FORWARD, .leftMotor = MD_BACKWARD, waitForStraightLineORLeft },
   { .state = GRADUAL_LEFT_TURN, .leftDutyCycle = SPEED(35), .rightDutyCycle = SPEED(35), .rightMotor = MD_FORWARD, .leftMotor = MD_BACKWARD, waitForStraightLineORLeft },
-  { .state = GRADUAL_LEFT_TURN_OP, .leftDutyCycle = SPEED(35), .rightDutyCycle = SPEED(35), .rightMotor = MD_FORWARD, .leftMotor = MD_BACKWARD, waitForStraightLineORLeft },
+  { .state = GRADUAL_LEFT_TURN_OP, .leftDutyCycle = SPEED(35), .rightDutyCycle = SPEED(35), .rightMotor = MD_FORWARD, .leftMotor = MD_BACKWARD, handleLeftOp },
 };
 
 uint8_t prevBitMap;
