@@ -92,7 +92,7 @@ const uint8_t sensorGpio[S_MAX] = {
 //fix this
 const motorInterface motor[] = {
   [M_LEFT] = { 7, 5 },
-  [M_RIGHT] = { 4, 6 }
+  [M_RIGHT] = { 4, 6 },
 };
 
 uint8_t prevBitMap;
@@ -137,33 +137,33 @@ bool handleLeftOp(uint8_t currentState) {
 }
 
 void setIndicatorLight(int8_t indicator) {
-  digitalWrite(8, LOW);  // turn on pullup resistors
-  digitalWrite(9, LOW);  // turn on pullup resistors
+  digitalWrite(8, LOW);   // turn on pullup resistors
+  digitalWrite(9, LOW);   // turn on pullup resistors
   digitalWrite(10, LOW);  // turn on pullup resistors
   digitalWrite(11, LOW);  // turn on pullup resistors
-  if(indicator >= 0) {
-      digitalWrite(indicator, LOW);  // turn on pullup resistors
+  if (indicator >= 0) {
+    digitalWrite(indicator, HIGH);  // turn on pullup resistors
   }
 }
 
 const steering_table_t straightSteer[] = {
-  { .state = ON_LINE, .leftDutyCycle = SPEED(45), .rightDutyCycle = SPEED(45), .rightMotor = MD_FORWARD, .leftMotor = MD_FORWARD, NULL, 0, NO_INDICATION},
+  { .state = ON_LINE, .leftDutyCycle = SPEED(45), .rightDutyCycle = SPEED(45), .rightMotor = MD_FORWARD, .leftMotor = MD_FORWARD, NULL, 0, NO_INDICATION },
 
-  { .state = GOING_RIGHT, .leftDutyCycle = 0, .rightDutyCycle = SPEED(45), .rightMotor = MD_FORWARD, .leftMotor = MD_COAST, NULL, 0, 8},
+  { .state = GOING_RIGHT, .leftDutyCycle = 0, .rightDutyCycle = SPEED(45), .rightMotor = MD_FORWARD, .leftMotor = MD_COAST, NULL, 0, 8 },
   { .state = GOING_LEFT, .leftDutyCycle = SPEED(45), .rightDutyCycle = 0, .rightMotor = MD_COAST, .leftMotor = MD_FORWARD, NULL, 0, 9 },
 
-  { .state = GOING_RIGHT_0, .leftDutyCycle = 0, .rightDutyCycle = SPEED(45), .rightMotor = MD_FORWARD, .leftMotor = MD_COAST, NULL, 0, 8},
-  { .state = GOING_RIGHT_1, .leftDutyCycle = 0, .rightDutyCycle = SPEED(45), .rightMotor = MD_FORWARD, .leftMotor = MD_BRAKE, NULL, 0, 8},
-  { .state = GOING_RIGHT_2, .leftDutyCycle = 0, .rightDutyCycle = SPEED(45), .rightMotor = MD_FORWARD, .leftMotor = MD_BRAKE, NULL, 0, 8},
-  { .state = GOING_RIGHT_3, .leftDutyCycle = SPEED(10), .rightDutyCycle = SPEED(45), .rightMotor = MD_FORWARD, .leftMotor = MD_FORWARD, waitForStraightLineORLeft, 0, 8},
+  { .state = GOING_RIGHT_0, .leftDutyCycle = 0, .rightDutyCycle = SPEED(45), .rightMotor = MD_FORWARD, .leftMotor = MD_COAST, NULL, 0, 8 },
+  { .state = GOING_RIGHT_1, .leftDutyCycle = 0, .rightDutyCycle = SPEED(45), .rightMotor = MD_FORWARD, .leftMotor = MD_BRAKE, NULL, 0, 8 },
+  { .state = GOING_RIGHT_2, .leftDutyCycle = 0, .rightDutyCycle = SPEED(45), .rightMotor = MD_FORWARD, .leftMotor = MD_BRAKE, NULL, 0, 8 },
+  { .state = GOING_RIGHT_3, .leftDutyCycle = SPEED(10), .rightDutyCycle = SPEED(45), .rightMotor = MD_FORWARD, .leftMotor = MD_FORWARD, waitForStraightLineORLeft, 0, 8 },
 
-  { .state = GOING_LEFT_0, .leftDutyCycle = SPEED(45), .rightDutyCycle = 0, .rightMotor = MD_COAST, .leftMotor = MD_FORWARD, NULL, 0, 9},
-  { .state = GOING_LEFT_1, .leftDutyCycle = SPEED(45), .rightDutyCycle = 0, .rightMotor = MD_BRAKE, .leftMotor = MD_FORWARD, NULL, 0, 9},
-  { .state = GOING_LEFT_2, .leftDutyCycle = SPEED(45), .rightDutyCycle = 0, .rightMotor = MD_BRAKE, .leftMotor = MD_FORWARD, NULL, 0, 9},
-  { .state = GOING_LEFT_3, .leftDutyCycle = SPEED(45), .rightDutyCycle = SPEED(10), .rightMotor = MD_FORWARD, .leftMotor = MD_FORWARD, waitForStraightLineORRight, 0, 9},
+  { .state = GOING_LEFT_0, .leftDutyCycle = SPEED(45), .rightDutyCycle = 0, .rightMotor = MD_COAST, .leftMotor = MD_FORWARD, NULL, 0, 9 },
+  { .state = GOING_LEFT_1, .leftDutyCycle = SPEED(45), .rightDutyCycle = 0, .rightMotor = MD_BRAKE, .leftMotor = MD_FORWARD, NULL, 0, 9 },
+  { .state = GOING_LEFT_2, .leftDutyCycle = SPEED(45), .rightDutyCycle = 0, .rightMotor = MD_BRAKE, .leftMotor = MD_FORWARD, NULL, 0, 9 },
+  { .state = GOING_LEFT_3, .leftDutyCycle = SPEED(45), .rightDutyCycle = SPEED(10), .rightMotor = MD_FORWARD, .leftMotor = MD_FORWARD, waitForStraightLineORRight, 0, 9 },
 
-  { .state = DEAD_END, .leftDutyCycle = SPEED(20), .rightDutyCycle = SPEED(20), .rightMotor = MD_FORWARD, .leftMotor = MD_FORWARD, NULL, NO_INDICATION},
-  { .state = INTERSECTION_DEAD, .leftDutyCycle = SPEED(5), .rightDutyCycle = SPEED(35), .rightMotor = MD_FORWARD, .leftMotor = MD_FORWARD, waitForStraightLineORLeft, 100, NO_INDICATION},
+  { .state = DEAD_END, .leftDutyCycle = SPEED(20), .rightDutyCycle = SPEED(20), .rightMotor = MD_FORWARD, .leftMotor = MD_FORWARD, NULL, NO_INDICATION },
+  { .state = INTERSECTION_DEAD, .leftDutyCycle = SPEED(5), .rightDutyCycle = SPEED(35), .rightMotor = MD_FORWARD, .leftMotor = MD_FORWARD, waitForStraightLineORLeft, 100, NO_INDICATION },
 
   { .state = SHARP_RIGHT_TURN_0, .leftDutyCycle = SPEED(35), .rightDutyCycle = SPEED(5), .rightMotor = MD_FORWARD, .leftMotor = MD_FORWARD, waitForStraightLineORRight, 100, 10 },
   { .state = SHARP_RIGHT_TURN_1, .leftDutyCycle = SPEED(35), .rightDutyCycle = SPEED(5), .rightMotor = MD_FORWARD, .leftMotor = MD_FORWARD, waitForStraightLineORRight, 100, 10 },
@@ -269,12 +269,12 @@ static void initOutputs(void) {
     pinMode(motor[i].ctrl1, OUTPUT);    // set pin to output
     digitalWrite(motor[i].ctrl1, LOW);  // turn on pullup resistors
   }
-  pinMode(8, OUTPUT);    // set pin to output
-  pinMode(9, OUTPUT);    // set pin to output
+  pinMode(8, OUTPUT);     // set pin to output
+  pinMode(9, OUTPUT);     // set pin to output
   pinMode(10, OUTPUT);    // set pin to output
   pinMode(11, OUTPUT);    // set pin to output
-  digitalWrite(8, LOW);  // turn on pullup resistors
-  digitalWrite(9, LOW);  // turn on pullup resistors
+  digitalWrite(8, LOW);   // turn on pullup resistors
+  digitalWrite(9, LOW);   // turn on pullup resistors
   digitalWrite(10, LOW);  // turn on pullup resistors
   digitalWrite(11, LOW);  // turn on pullup resistors
 }
