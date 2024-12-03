@@ -87,7 +87,7 @@ const motorInterface motor[] = {
 bool waitForStraightLineORLeft(uint8_t currentState) {
   bool ret = false;
 
-  if((currentState == ON_LINE) || (currentState == DEAD_END) || (currentState == GOING_LEFT)) {
+  if((currentState == ON_LINE)  || (currentState == GOING_LEFT)) {
     ret = true;
     delay(750);
   }
@@ -97,7 +97,7 @@ bool waitForStraightLineORLeft(uint8_t currentState) {
 bool waitForStraightLineORRight(uint8_t currentState) {
   bool ret = false;
 
-  if((currentState == ON_LINE) || (currentState == DEAD_END) || (currentState == GOING_RIGHT)) {
+  if((currentState == ON_LINE) || (currentState == GOING_RIGHT)) {
     ret = true;
     delay(750);
   }
