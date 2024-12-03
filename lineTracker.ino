@@ -109,7 +109,7 @@ bool handleRightOp(uint8_t currentState) {
 
   if((currentState == ON_LINE) || (currentState == GOING_RIGHT)) {
     ret = true;
-    delay(1500);
+    delay(1000);
   }
   return ret;
 }
@@ -119,7 +119,7 @@ bool handleLeftOp(uint8_t currentState) {
 
   if((currentState == ON_LINE) || (currentState == GOING_LEFT)) {
     ret = true;
-    delay(1500);
+    delay(1000);
   }
   return ret;
 }
