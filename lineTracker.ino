@@ -95,7 +95,7 @@ static unsigned long timeStamp;
 bool waitForStraightLineORLeft(uint8_t currentState) {
   bool ret = false;
 
-  if ((currentState == ON_LINE) || (currentState == GOING_LEFT) || ((millis() - timeStamp) > 1000)) {
+  if ((currentState == ON_LINE) || ((millis() - timeStamp) > 1500)) {
     ret = true;
   }
   return ret;
@@ -104,7 +104,7 @@ bool waitForStraightLineORLeft(uint8_t currentState) {
 bool waitForStraightLineORRight(uint8_t currentState) {
   bool ret = false;
 
-  if ((currentState == ON_LINE) || (currentState == GOING_RIGHT) || ((millis() - timeStamp) > 1000)) {
+  if ((currentState == ON_LINE) ||  ((millis() - timeStamp) > 1500)) {
     ret = true;
   }
   return ret;
@@ -113,7 +113,7 @@ bool waitForStraightLineORRight(uint8_t currentState) {
 bool handleRightOp(uint8_t currentState) {
   bool ret = false;
 
-  if ((currentState == ON_LINE) || (currentState == GOING_RIGHT) || ((millis() - timeStamp) > 1000)) {
+  if ((currentState == ON_LINE) || ((millis() - timeStamp) > 1500)) {
     ret = true;
   }
   return ret;
@@ -122,7 +122,7 @@ bool handleRightOp(uint8_t currentState) {
 bool handleLeftOp(uint8_t currentState) {
   bool ret = false;
 
-  if ((currentState == ON_LINE) || (currentState == GOING_LEFT) || ((millis() - timeStamp) > 1000)) {
+  if ((currentState == ON_LINE) || ((millis() - timeStamp) > 1500)) {
     ret = true;
   }
   return ret;
@@ -145,17 +145,17 @@ const steering_table_t straightSteer[] = {
   { .state = GOING_LEFT_3, .leftDutyCycle = SPEED(45), .rightDutyCycle = SPEED(10), .rightMotor = MD_FORWARD, .leftMotor = MD_FORWARD, waitForStraightLineORRight, 0 },
 
   { .state = DEAD_END, .leftDutyCycle = 75, .rightDutyCycle = 75, .rightMotor = MD_FORWARD, .leftMotor = MD_FORWARD, NULL },
-  { .state = INTERSECTION_DEAD, .leftDutyCycle = SPEED(5), .rightDutyCycle = SPEED(35), .rightMotor = MD_FORWARD, .leftMotor = MD_FORWARD, waitForStraightLineORLeft, 50 },
+  { .state = INTERSECTION_DEAD, .leftDutyCycle = SPEED(5), .rightDutyCycle = SPEED(35), .rightMotor = MD_FORWARD, .leftMotor = MD_FORWARD, waitForStraightLineORLeft, 100 },
 
-  { .state = SHARP_RIGHT_TURN, .leftDutyCycle = SPEED(35), .rightDutyCycle = SPEED(5), .rightMotor = MD_FORWARD, .leftMotor = MD_FORWARD, waitForStraightLineORRight, 50 },
-  { .state = SHARP_RIGHT_TURN_1, .leftDutyCycle = SPEED(35), .rightDutyCycle = SPEED(5), .rightMotor = MD_FORWARD, .leftMotor = MD_FORWARD, waitForStraightLineORRight, 50 },
-  { .state = GRADUAL_RIGHT_TURN, .leftDutyCycle = SPEED(35), .rightDutyCycle = SPEED(5), .rightMotor = MD_FORWARD, .leftMotor = MD_FORWARD, waitForStraightLineORRight, 50 },
-  { .state = GRADUAL_RIGHT_TURN_OP, .leftDutyCycle = SPEED(40), .rightDutyCycle = SPEED(5), .rightMotor = MD_FORWARD, .leftMotor = MD_FORWARD, handleRightOp, 70 },
+  { .state = SHARP_RIGHT_TURN, .leftDutyCycle = SPEED(35), .rightDutyCycle = SPEED(5), .rightMotor = MD_FORWARD, .leftMotor = MD_FORWARD, waitForStraightLineORRight, 100 },
+  { .state = SHARP_RIGHT_TURN_1, .leftDutyCycle = SPEED(35), .rightDutyCycle = SPEED(5), .rightMotor = MD_FORWARD, .leftMotor = MD_FORWARD, waitForStraightLineORRight, 100 },
+  { .state = GRADUAL_RIGHT_TURN, .leftDutyCycle = SPEED(35), .rightDutyCycle = SPEED(5), .rightMotor = MD_FORWARD, .leftMotor = MD_FORWARD, waitForStraightLineORRight, 100 },
+  { .state = GRADUAL_RIGHT_TURN_OP, .leftDutyCycle = SPEED(40), .rightDutyCycle = SPEED(5), .rightMotor = MD_FORWARD, .leftMotor = MD_FORWARD, handleRightOp, 125 },
 
-  { .state = SHARP_LEFT_TURN, .leftDutyCycle = SPEED(5), .rightDutyCycle = SPEED(35), .rightMotor = MD_FORWARD, .leftMotor = MD_FORWARD, waitForStraightLineORLeft, 50 },
-  { .state = SHARP_LEFT_TURN_1, .leftDutyCycle = SPEED(5), .rightDutyCycle = SPEED(35), .rightMotor = MD_FORWARD, .leftMotor = MD_FORWARD, waitForStraightLineORLeft, 50 },
-  { .state = GRADUAL_LEFT_TURN, .leftDutyCycle = SPEED(5), .rightDutyCycle = SPEED(35), .rightMotor = MD_FORWARD, .leftMotor = MD_FORWARD, waitForStraightLineORLeft, 50 },
-  { .state = GRADUAL_LEFT_TURN_OP, .leftDutyCycle = SPEED(10), .rightDutyCycle = SPEED(40), .rightMotor = MD_FORWARD, .leftMotor = MD_FORWARD, handleLeftOp, 70 },
+  { .state = SHARP_LEFT_TURN, .leftDutyCycle = SPEED(5), .rightDutyCycle = SPEED(35), .rightMotor = MD_FORWARD, .leftMotor = MD_FORWARD, waitForStraightLineORLeft, 100 },
+  { .state = SHARP_LEFT_TURN_1, .leftDutyCycle = SPEED(5), .rightDutyCycle = SPEED(35), .rightMotor = MD_FORWARD, .leftMotor = MD_FORWARD, waitForStraightLineORLeft, 100 },
+  { .state = GRADUAL_LEFT_TURN, .leftDutyCycle = SPEED(5), .rightDutyCycle = SPEED(35), .rightMotor = MD_FORWARD, .leftMotor = MD_FORWARD, waitForStraightLineORLeft, 100 },
+  { .state = GRADUAL_LEFT_TURN_OP, .leftDutyCycle = SPEED(10), .rightDutyCycle = SPEED(40), .rightMotor = MD_FORWARD, .leftMotor = MD_FORWARD, handleLeftOp, 125 },
 };
 
 static void readAllSensors(void) {
