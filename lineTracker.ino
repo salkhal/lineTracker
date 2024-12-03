@@ -58,13 +58,19 @@ typedef struct {
 #define GOING_LEFT_2 (uint8_t)(BIT(S_CR) | BIT(S_RR))
 #define GOING_LEFT_3 (uint8_t)(BIT(S_RR))
 
-#define SHARP_RIGHT_TURN (uint8_t)(BIT(S_CM) | BIT(S_RR))
-#define SHARP_RIGHT_TURN_1 (uint8_t)(BIT(S_CM) | BIT(S_RR) | BIT(S_CL))
+#define SHARP_RIGHT_TURN_0 (uint8_t)(BIT(S_CM) | BIT(S_RR))
+#define SHARP_RIGHT_TURN_1 (uint8_t)(BIT(S_CM) | BIT(S_RR) | BIT(S_FM))
+#define SHARP_RIGHT_TURN_2 (uint8_t)(BIT(S_CM) | BIT(S_RR) | BIT(S_CL))
+#define SHARP_RIGHT_TURN_3 (uint8_t)(BIT(S_CM) | BIT(S_RR) | BIT(S_CL) | BIT(S_FM))
+#define SHARP_RIGHT_TURN_4 (uint8_t)(BIT(S_CL) | BIT(S_CM) | BIT(S_CR) | BIT(S_RR) | BIT(S_FM))
 #define GRADUAL_RIGHT_TURN (uint8_t)(BIT(S_CM) | BIT(S_CR) | BIT(S_RR))
 #define GRADUAL_RIGHT_TURN_OP (uint8_t)(BIT(S_CL) | BIT(S_CM) | BIT(S_CR) | BIT(S_RR))
 
-#define SHARP_LEFT_TURN (uint8_t)(BIT(S_CM) | BIT(S_LL))
-#define SHARP_LEFT_TURN_1 (uint8_t)(BIT(S_CM) | BIT(S_LL) | BIT(S_CR))
+#define SHARP_LEFT_TURN_0 (uint8_t)(BIT(S_CM) | BIT(S_LL))
+#define SHARP_LEFT_TURN_1 (uint8_t)(BIT(S_CM) | BIT(S_LL) | BIT(S_FM))
+#define SHARP_LEFT_TURN_2 (uint8_t)(BIT(S_CM) | BIT(S_LL) | BIT(S_CR))
+#define SHARP_LEFT_TURN_3 (uint8_t)(BIT(S_CM) | BIT(S_LL) | BIT(S_CR) | BIT(S_FM))
+#define SHARP_LEFT_TURN_4 (uint8_t)(BIT(S_CR) | BIT(S_CM) | BIT(S_CL) | BIT(S_LL) | BIT(S_FM))
 #define GRADUAL_LEFT_TURN (uint8_t)(BIT(S_CM) | BIT(S_CL) | BIT(S_LL))
 #define GRADUAL_LEFT_TURN_OP (uint8_t)(BIT(S_CR) | BIT(S_CM) | BIT(S_CL) | BIT(S_LL))
 
@@ -147,13 +153,19 @@ const steering_table_t straightSteer[] = {
   { .state = DEAD_END, .leftDutyCycle = 75, .rightDutyCycle = 75, .rightMotor = MD_FORWARD, .leftMotor = MD_FORWARD, NULL },
   { .state = INTERSECTION_DEAD, .leftDutyCycle = SPEED(5), .rightDutyCycle = SPEED(35), .rightMotor = MD_FORWARD, .leftMotor = MD_FORWARD, waitForStraightLineORLeft, 100 },
 
-  { .state = SHARP_RIGHT_TURN, .leftDutyCycle = SPEED(35), .rightDutyCycle = SPEED(5), .rightMotor = MD_FORWARD, .leftMotor = MD_FORWARD, waitForStraightLineORRight, 100 },
+  { .state = SHARP_RIGHT_TURN_0, .leftDutyCycle = SPEED(35), .rightDutyCycle = SPEED(5), .rightMotor = MD_FORWARD, .leftMotor = MD_FORWARD, waitForStraightLineORRight, 100 },
   { .state = SHARP_RIGHT_TURN_1, .leftDutyCycle = SPEED(35), .rightDutyCycle = SPEED(5), .rightMotor = MD_FORWARD, .leftMotor = MD_FORWARD, waitForStraightLineORRight, 100 },
+  { .state = SHARP_RIGHT_TURN_2, .leftDutyCycle = SPEED(35), .rightDutyCycle = SPEED(5), .rightMotor = MD_FORWARD, .leftMotor = MD_FORWARD, waitForStraightLineORRight, 100 },
+  { .state = SHARP_RIGHT_TURN_3, .leftDutyCycle = SPEED(35), .rightDutyCycle = SPEED(5), .rightMotor = MD_FORWARD, .leftMotor = MD_FORWARD, waitForStraightLineORRight, 100 },
+  { .state = SHARP_RIGHT_TURN_4, .leftDutyCycle = SPEED(35), .rightDutyCycle = SPEED(5), .rightMotor = MD_FORWARD, .leftMotor = MD_FORWARD, waitForStraightLineORRight, 100 },
   { .state = GRADUAL_RIGHT_TURN, .leftDutyCycle = SPEED(35), .rightDutyCycle = SPEED(5), .rightMotor = MD_FORWARD, .leftMotor = MD_FORWARD, waitForStraightLineORRight, 100 },
   { .state = GRADUAL_RIGHT_TURN_OP, .leftDutyCycle = SPEED(40), .rightDutyCycle = SPEED(5), .rightMotor = MD_FORWARD, .leftMotor = MD_FORWARD, handleRightOp, 125 },
 
-  { .state = SHARP_LEFT_TURN, .leftDutyCycle = SPEED(5), .rightDutyCycle = SPEED(35), .rightMotor = MD_FORWARD, .leftMotor = MD_FORWARD, waitForStraightLineORLeft, 100 },
+  { .state = SHARP_LEFT_TURN_0, .leftDutyCycle = SPEED(5), .rightDutyCycle = SPEED(35), .rightMotor = MD_FORWARD, .leftMotor = MD_FORWARD, waitForStraightLineORLeft, 100 },
   { .state = SHARP_LEFT_TURN_1, .leftDutyCycle = SPEED(5), .rightDutyCycle = SPEED(35), .rightMotor = MD_FORWARD, .leftMotor = MD_FORWARD, waitForStraightLineORLeft, 100 },
+  { .state = SHARP_LEFT_TURN_2, .leftDutyCycle = SPEED(5), .rightDutyCycle = SPEED(35), .rightMotor = MD_FORWARD, .leftMotor = MD_FORWARD, waitForStraightLineORLeft, 100 },
+  { .state = SHARP_LEFT_TURN_3, .leftDutyCycle = SPEED(5), .rightDutyCycle = SPEED(35), .rightMotor = MD_FORWARD, .leftMotor = MD_FORWARD, waitForStraightLineORLeft, 100 },
+  { .state = SHARP_LEFT_TURN_4, .leftDutyCycle = SPEED(5), .rightDutyCycle = SPEED(35), .rightMotor = MD_FORWARD, .leftMotor = MD_FORWARD, waitForStraightLineORLeft, 100 },
   { .state = GRADUAL_LEFT_TURN, .leftDutyCycle = SPEED(5), .rightDutyCycle = SPEED(35), .rightMotor = MD_FORWARD, .leftMotor = MD_FORWARD, waitForStraightLineORLeft, 100 },
   { .state = GRADUAL_LEFT_TURN_OP, .leftDutyCycle = SPEED(10), .rightDutyCycle = SPEED(40), .rightMotor = MD_FORWARD, .leftMotor = MD_FORWARD, handleLeftOp, 125 },
 };
@@ -210,15 +222,6 @@ static bool stayOnLine(uint8_t state) {
       prevBitMap = state;
     }
     return true;
-  }
-  return false;
-}
-
-static bool detectTurn(uint8_t state, uint8_t prevState) {
-  if ((prevState == ON_LINE) || (prevState == GOING_RIGHT_0) || (prevState == GOING_LEFT_0)) {
-    if ((state == SHARP_RIGHT_TURN) || (state == GRADUAL_RIGHT_TURN) || (state == SHARP_LEFT_TURN) || (state == GRADUAL_LEFT_TURN) || (state == INTERSECTION_DEAD) || (state == DEAD_END)) {
-      return true;
-    }
   }
   return false;
 }
