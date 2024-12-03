@@ -89,6 +89,7 @@ bool waitForStraightLineORLeft(uint8_t currentState) {
 
   if((currentState == ON_LINE) || (currentState == DEAD_END) || (currentState == GOING_LEFT)) {
     ret = true;
+    delay(750);
   }
   return ret;
 }
@@ -98,6 +99,7 @@ bool waitForStraightLineORRight(uint8_t currentState) {
 
   if((currentState == ON_LINE) || (currentState == DEAD_END) || (currentState == GOING_RIGHT)) {
     ret = true;
+    delay(750);
   }
   return ret;
 }
