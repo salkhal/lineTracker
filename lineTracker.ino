@@ -110,7 +110,7 @@ const steering_table_t straightSteer[] = {
   { .state = GOING_LEFT_3, .leftDutyCycle = SPEED(45), .rightDutyCycle = SPEED(45), .rightMotor = MD_BACKWARD, .leftMotor = MD_FORWARD, waitForStraightLine},
   
   { .state = DEAD_END,   .leftDutyCycle = 75,  .rightDutyCycle = 75, .rightMotor = MD_FORWARD, .leftMotor = MD_FORWARD, NULL},
-  { .state = INTERSECTION_DEAD, .leftDutyCycle = SPEED(35), .rightDutyCycle = SPEED(35), .rightMotor = MD_FORWARD, .leftMotor = MD_BACKWARD, NULL },
+  { .state = INTERSECTION_DEAD, .leftDutyCycle = SPEED(35), .rightDutyCycle = SPEED(35), .rightMotor = MD_FORWARD, .leftMotor = MD_BACKWARD, waitForStraightLine },
 
   { .state = SHARP_RIGHT_TURN, .leftDutyCycle = SPEED(35), .rightDutyCycle = SPEED(35), .rightMotor = MD_BACKWARD, .leftMotor = MD_FORWARD, waitForStraightLine },
   { .state = GRADUAL_RIGHT_TURN, .leftDutyCycle = SPEED(35), .rightDutyCycle = SPEED(35), .rightMotor = MD_BACKWARD, .leftMotor = MD_FORWARD, waitForStraightLine },
