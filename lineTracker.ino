@@ -175,7 +175,7 @@ static bool stayOnLine(uint8_t state) {
     }
   }
   steering_table_t* steer = FIND_ENTRY(straightSteer, ARRAY_SIZE(straightSteer), state, state);
-
+  steer->nextStateFunc = NULL;
   if (steer != NULL) {  //FROM GPT
     setMotor(motor[M_LEFT], steer->leftMotor, steer->leftDutyCycle);
     setMotor(motor[M_RIGHT], steer->rightMotor, steer->rightDutyCycle);
@@ -207,25 +207,6 @@ static bool performingTurn = false;
 void handleSteering(void) {
   noInterrupts();
   readAllSensors();
-  //Serial.println(sensorGpio);
-  /*if (performingTurn == true) {
-    if ((sensorBitMap == ON_LINE) || (sensorBitMap == DEAD_END) || (sensorBitMap == GOING_RIGHT_0) || (sensorBitMap == GOING_RIGHT_1) || (sensorBitMap == GOING_LEFT_0) || (sensorBitMap == GOING_LEFT_1)) {
-      performingTurn = false;
-    }
-  }
-  if (!performingTurn) {
-    if (detectTurn(sensorBitMap, prevBitMap)) {
-      makeTurn(sensorBitMap);
-      performingTurn = true;
-      digitalWrite(8, HIGH);
-    } else {
-      stayOnLine(sensorBitMap);
-      digitalWrite(8, LOW);
-    }
-  }
-
-  prevBitMap = sensorBitMap;
-  interrupts();*/
   if(!stayOnLine(sensorBitMap)) {
     stayOnLine(prevBitMap);
   }
