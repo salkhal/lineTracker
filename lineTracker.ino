@@ -103,7 +103,7 @@ static unsigned long timeStamp;
 bool waitForStraightLineORLeft(uint8_t currentState) {
   bool ret = false;
 
-  if ((currentState == ON_LINE) || ((millis() - timeStamp) > 1500)) {
+  if ((currentState == ON_LINE) || ((millis() - timeStamp) > 500)) {
     ret = true;
   }
   return ret;
@@ -112,7 +112,7 @@ bool waitForStraightLineORLeft(uint8_t currentState) {
 bool waitForStraightLineORRight(uint8_t currentState) {
   bool ret = false;
 
-  if ((currentState == ON_LINE) || ((millis() - timeStamp) > 1500)) {
+  if ((currentState == ON_LINE) || ((millis() - timeStamp) > 500)) {
     ret = true;
   }
   return ret;
@@ -121,7 +121,7 @@ bool waitForStraightLineORRight(uint8_t currentState) {
 bool handleRightOp(uint8_t currentState) {
   bool ret = false;
 
-  if ((currentState == ON_LINE) || ((millis() - timeStamp) > 1500)) {
+  if ((currentState == ON_LINE) || ((millis() - timeStamp) > 500)) {
     ret = true;
   }
   return ret;
@@ -130,7 +130,7 @@ bool handleRightOp(uint8_t currentState) {
 bool handleLeftOp(uint8_t currentState) {
   bool ret = false;
 
-  if ((currentState == ON_LINE) || ((millis() - timeStamp) > 1500)) {
+  if ((currentState == ON_LINE) || ((millis() - timeStamp) > 500)) {
     ret = true;
   }
   return ret;
