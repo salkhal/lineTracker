@@ -137,12 +137,12 @@ bool handleLeftOp(uint8_t currentState) {
 }
 
 void setIndicatorLight(int8_t indicator) {
-  digitalWrite(8, LOW);   // turn on pullup resistors
-  digitalWrite(9, LOW);   // turn on pullup resistors
-  digitalWrite(10, LOW);  // turn on pullup resistors
-  digitalWrite(11, LOW);  // turn on pullup resistors
+  digitalWrite(8, LOW); 
+  digitalWrite(9, LOW); 
+  digitalWrite(10, LOW);
+  digitalWrite(11, LOW);
   if (indicator >= 0) {
-    digitalWrite(indicator, HIGH);  // turn on pullup resistors
+    digitalWrite(indicator, HIGH);
   }
 }
 
@@ -162,7 +162,7 @@ const steering_table_t straightSteer[] = {
   { .state = GOING_LEFT_2, .leftDutyCycle = SPEED(45), .rightDutyCycle = 0, .rightMotor = MD_BRAKE, .leftMotor = MD_FORWARD, NULL, 0, 9 },
   { .state = GOING_LEFT_3, .leftDutyCycle = SPEED(45), .rightDutyCycle = SPEED(10), .rightMotor = MD_FORWARD, .leftMotor = MD_FORWARD, waitForStraightLineORRight, 0, 9 },
 
-  { .state = DEAD_END, .leftDutyCycle = SPEED(20), .rightDutyCycle = SPEED(20), .rightMotor = MD_FORWARD, .leftMotor = MD_FORWARD, NULL, NO_INDICATION },
+  { .state = DEAD_END, .leftDutyCycle = SPEED(38), .rightDutyCycle = SPEED(38), .rightMotor = MD_FORWARD, .leftMotor = MD_FORWARD, NULL, NO_INDICATION },
   { .state = INTERSECTION_DEAD, .leftDutyCycle = SPEED(5), .rightDutyCycle = SPEED(35), .rightMotor = MD_FORWARD, .leftMotor = MD_FORWARD, waitForStraightLineORLeft, 100, NO_INDICATION },
 
   { .state = SHARP_RIGHT_TURN_0, .leftDutyCycle = SPEED(35), .rightDutyCycle = SPEED(5), .rightMotor = MD_FORWARD, .leftMotor = MD_FORWARD, waitForStraightLineORRight, 100, 10 },
@@ -245,7 +245,7 @@ void haltMotors(void) {
     digitalWrite(motor[i].ctrl1, HIGH);  // turn on pullup resistors
   }
 }
-static bool performingTurn = false;
+
 void handleSteering(void) {
   noInterrupts();
   readAllSensors();
@@ -282,7 +282,6 @@ static void initOutputs(void) {
 void setup() {
   initInputs();
   initOutputs();
-  pinMode(8, OUTPUT);
   Serial.begin(9600);
 }
 
