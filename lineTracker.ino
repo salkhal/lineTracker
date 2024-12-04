@@ -258,7 +258,7 @@ void handleSteering(void) {
 static void initInputs(void) {
   for (uint8_t i = 0; i < ARRAY_SIZE(sensorGpio); i++) {
     pinMode(sensorGpio[i], INPUT_PULLUP);  // Interrupt source 1
-    attachInterrupt(digitalPinToInterrupt(sensorGpio[i]), handleSteering, CHANGE);
+    //attachInterrupt(digitalPinToInterrupt(sensorGpio[i]), handleSteering, CHANGE);
   }
 }
 
@@ -289,4 +289,18 @@ void loop() {
   //handleSteering();  //FROM GPT
   //Serial.println(sensorBitMap, HEX);
   // put your main code here, to run repeatedly:
+  setMotor(motor[M_LEFT], MD_FORWARD, 125);
+  setMotor(motor[M_RIGHT], MD_BACKWARD, 125);
+  digitalWrite(8, LOW);   // turn on pullup resistors
+  digitalWrite(9, LOW);   // turn on pullup resistors
+  digitalWrite(10, HIGH);  // turn on pullup resistors
+  digitalWrite(11, HIGH);  // turn on pullup resistors
+  delay(5000);
+  setMotor(motor[M_LEFT], MD_BACKWARD, 125);
+  setMotor(motor[M_RIGHT], MD_FORWARD, 125);
+  digitalWrite(8, HIGH);   // turn on pullup resistors
+  digitalWrite(9, HIGH);   // turn on pullup resistors
+  digitalWrite(10, LOW);  // turn on pullup resistors
+  digitalWrite(11, LOW);  // turn on pullup resistors
+  delay(5000);
 }
