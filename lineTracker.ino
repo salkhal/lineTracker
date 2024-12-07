@@ -1,6 +1,6 @@
 #include "utils.h"
 
-#define SPEED(X) (X * 1.9)
+#define SPEED(X) (X * 2.5)
 
 #define NO_INDICATION (-1)
 
@@ -103,7 +103,7 @@ static unsigned long timeStamp;
 bool waitForStraightLineORLeft(uint8_t currentState) {
   bool ret = false;
 
-  if ((currentState == ON_LINE) || ((millis() - timeStamp) > 1000)) {
+  if ((currentState == ON_LINE) || ((millis() - timeStamp) > 1700)) {
     ret = true;
   }
   return ret;
@@ -112,7 +112,7 @@ bool waitForStraightLineORLeft(uint8_t currentState) {
 bool waitForStraightLineORRight(uint8_t currentState) {
   bool ret = false;
 
-  if ((currentState == ON_LINE) || ((millis() - timeStamp) > 1000)) {
+  if ((currentState == ON_LINE) || ((millis() - timeStamp) > 1700)) {
     ret = true;
   }
   return ret;
@@ -121,7 +121,7 @@ bool waitForStraightLineORRight(uint8_t currentState) {
 bool handleRightOp(uint8_t currentState) {
   bool ret = false;
 
-  if ((currentState == ON_LINE) || ((millis() - timeStamp) > 1000)) {
+  if ((currentState == ON_LINE) || ((millis() - timeStamp) > 1700)) {
     ret = true;
   }
   return ret;
@@ -130,7 +130,7 @@ bool handleRightOp(uint8_t currentState) {
 bool handleLeftOp(uint8_t currentState) {
   bool ret = false;
 
-  if ((currentState == ON_LINE) || ((millis() - timeStamp) > 1000)) {
+  if ((currentState == ON_LINE) || ((millis() - timeStamp) > 1700)) {
     ret = true;
   }
   return ret;
@@ -149,37 +149,37 @@ void setIndicatorLight(int8_t indicator) {
 const steering_table_t straightSteer[] = {
   { .state = ON_LINE,               .leftDutyCycle = SPEED(45), .rightDutyCycle = SPEED(45), .rightMotor = MD_FORWARD, .leftMotor = MD_FORWARD,  .nextStateFunc = NULL,                        .delay = 0,   .indicator = NO_INDICATION },   
 
-  { .state = GOING_RIGHT,           .leftDutyCycle = 0,         .rightDutyCycle = SPEED(45), .rightMotor = MD_FORWARD, .leftMotor = MD_COAST,    .nextStateFunc = NULL,                        .delay = 0,   .indicator = 8 },
-  { .state = GOING_LEFT,            .leftDutyCycle = SPEED(45), .rightDutyCycle = 0,         .rightMotor = MD_COAST,   .leftMotor = MD_FORWARD,  .nextStateFunc = NULL,                        .delay = 0,   .indicator = 9 },
+  { .state = GOING_RIGHT,           .leftDutyCycle = SPEED(18),         .rightDutyCycle = SPEED(45), .rightMotor = MD_FORWARD, .leftMotor = MD_FORWARD,    .nextStateFunc = NULL,                        .delay = 0,   .indicator = 8 },
+  { .state = GOING_LEFT,            .leftDutyCycle = SPEED(45), .rightDutyCycle = SPEED(18),         .rightMotor = MD_FORWARD,   .leftMotor = MD_FORWARD,  .nextStateFunc = NULL,                        .delay = 0,   .indicator = 9 },
   
-  { .state = GOING_RIGHT_0,         .leftDutyCycle = 0,         .rightDutyCycle = SPEED(45), .rightMotor = MD_FORWARD, .leftMotor = MD_COAST,    .nextStateFunc = NULL,                        .delay = 0,   .indicator = 8 },
-  { .state = GOING_RIGHT_1,         .leftDutyCycle = 0,         .rightDutyCycle = SPEED(45), .rightMotor = MD_FORWARD, .leftMotor = MD_BRAKE,    .nextStateFunc = NULL,                        .delay = 0,   .indicator = 8 },
-  { .state = GOING_RIGHT_2,         .leftDutyCycle = 0,         .rightDutyCycle = SPEED(45), .rightMotor = MD_FORWARD, .leftMotor = MD_BRAKE,    .nextStateFunc = NULL,                        .delay = 0,   .indicator = 8 },
-  { .state = GOING_RIGHT_3,         .leftDutyCycle = 0,         .rightDutyCycle = SPEED(45), .rightMotor = MD_FORWARD, .leftMotor = MD_BRAKE,    .nextStateFunc = waitForStraightLineORLeft,   .delay = 0,   .indicator = 8 },
+  { .state = GOING_RIGHT_0,         .leftDutyCycle = SPEED(15),         .rightDutyCycle = SPEED(45), .rightMotor = MD_FORWARD, .leftMotor = MD_FORWARD,    .nextStateFunc = NULL,                        .delay = 0,   .indicator = 8 },
+  { .state = GOING_RIGHT_1,         .leftDutyCycle = SPEED(15),         .rightDutyCycle = SPEED(45), .rightMotor = MD_FORWARD, .leftMotor = MD_FORWARD,    .nextStateFunc = NULL,                        .delay = 0,   .indicator = 8 },
+  { .state = GOING_RIGHT_2,         .leftDutyCycle = SPEED(15),         .rightDutyCycle = SPEED(45), .rightMotor = MD_FORWARD, .leftMotor = MD_FORWARD,    .nextStateFunc = NULL,                        .delay = 0,   .indicator = 8 },
+  { .state = GOING_RIGHT_3,         .leftDutyCycle = SPEED(15),         .rightDutyCycle = SPEED(45), .rightMotor = MD_FORWARD, .leftMotor = MD_FORWARD,    .nextStateFunc = waitForStraightLineORLeft,   .delay = 0,   .indicator = 8 },
 
   { .state = GOING_LEFT_0,          .leftDutyCycle = SPEED(45), .rightDutyCycle = 0,         .rightMotor = MD_COAST,   .leftMotor = MD_FORWARD,  .nextStateFunc = NULL,                        .delay = 0,   .indicator = 9 },
   { .state = GOING_LEFT_1,          .leftDutyCycle = SPEED(45), .rightDutyCycle = 0,         .rightMotor = MD_BRAKE,   .leftMotor = MD_FORWARD,  .nextStateFunc = NULL,                        .delay = 0,   .indicator = 9 },
   { .state = GOING_LEFT_2,          .leftDutyCycle = SPEED(45), .rightDutyCycle = 0,         .rightMotor = MD_BRAKE,   .leftMotor = MD_FORWARD,  .nextStateFunc = NULL,                        .delay = 0,   .indicator = 9 },
   { .state = GOING_LEFT_3,          .leftDutyCycle = SPEED(45), .rightDutyCycle = 0,         .rightMotor = MD_BRAKE,   .leftMotor = MD_FORWARD,  .nextStateFunc = waitForStraightLineORRight,  .delay = 0,   .indicator = 9 },
 
-  { .state = DEAD_END,              .leftDutyCycle = SPEED(38), .rightDutyCycle = SPEED(38), .rightMotor = MD_FORWARD, .leftMotor = MD_FORWARD,  .nextStateFunc = NULL,                        .delay = 900, .indicator = NO_INDICATION },
-  { .state = INTERSECTION_DEAD,     .leftDutyCycle = SPEED(0),  .rightDutyCycle = SPEED(35), .rightMotor = MD_BRAKE,   .leftMotor = MD_FORWARD,  .nextStateFunc = waitForStraightLineORLeft,   .delay = 900, .indicator = NO_INDICATION },
+  { .state = DEAD_END,              .leftDutyCycle = SPEED(38), .rightDutyCycle = SPEED(38), .rightMotor = MD_FORWARD, .leftMotor = MD_FORWARD,  .nextStateFunc = NULL,                        .delay = 1200, .indicator = NO_INDICATION },
+  { .state = INTERSECTION_DEAD,     .leftDutyCycle = SPEED(0),  .rightDutyCycle = SPEED(35), .rightMotor = MD_BRAKE,   .leftMotor = MD_FORWARD,  .nextStateFunc = waitForStraightLineORLeft,   .delay = 1200, .indicator = NO_INDICATION },
 
-  { .state = SHARP_RIGHT_TURN_0,    .leftDutyCycle = SPEED(35), .rightDutyCycle = SPEED(10), .rightMotor = MD_BACKWARD, .leftMotor = MD_FORWARD, .nextStateFunc = waitForStraightLineORRight,  .delay = 900, .indicator = 10 },
+  { .state = SHARP_RIGHT_TURN_0,    .leftDutyCycle = SPEED(55), .rightDutyCycle = SPEED(10), .rightMotor = MD_BACKWARD, .leftMotor = MD_FORWARD, .nextStateFunc = waitForStraightLineORRight,  .delay = 1200, .indicator = 10 },
  // { .state = SHARP_RIGHT_TURN_1,    .leftDutyCycle = SPEED(35), .rightDutyCycle = SPEED(10), .rightMotor = MD_BACKWARD, .leftMotor = MD_FORWARD, .nextStateFunc = waitForStraightLineORRight,  .delay = 900, .indicator = 10 },
-  { .state = SHARP_RIGHT_TURN_2,    .leftDutyCycle = SPEED(35), .rightDutyCycle = SPEED(10), .rightMotor = MD_BACKWARD, .leftMotor = MD_FORWARD, .nextStateFunc = waitForStraightLineORRight,  .delay = 900, .indicator = 10 },
+  { .state = SHARP_RIGHT_TURN_2,    .leftDutyCycle = SPEED(55), .rightDutyCycle = SPEED(10), .rightMotor = MD_BACKWARD, .leftMotor = MD_FORWARD, .nextStateFunc = waitForStraightLineORRight,  .delay = 1200, .indicator = 10 },
  // { .state = SHARP_RIGHT_TURN_3,    .leftDutyCycle = SPEED(35), .rightDutyCycle = SPEED(10), .rightMotor = MD_BACKWARD, .leftMotor = MD_FORWARD, .nextStateFunc = waitForStraightLineORRight,  .delay = 900, .indicator = 10 },
  // { .state = SHARP_RIGHT_TURN_4,    .leftDutyCycle = SPEED(35), .rightDutyCycle = SPEED(10), .rightMotor = MD_BACKWARD, .leftMotor = MD_FORWARD, .nextStateFunc = waitForStraightLineORRight,  .delay = 900, .indicator = 10 },
-  { .state = GRADUAL_RIGHT_TURN,    .leftDutyCycle = SPEED(35), .rightDutyCycle = SPEED(10), .rightMotor = MD_BACKWARD, .leftMotor = MD_FORWARD, .nextStateFunc = waitForStraightLineORRight,  .delay = 900, .indicator = 10 },
-  { .state = GRADUAL_RIGHT_TURN_OP, .leftDutyCycle = SPEED(40), .rightDutyCycle = SPEED(10), .rightMotor = MD_BACKWARD, .leftMotor = MD_FORWARD, .nextStateFunc = handleRightOp,               .delay = 995, .indicator = 10 },
+  { .state = GRADUAL_RIGHT_TURN,    .leftDutyCycle = SPEED(55), .rightDutyCycle = SPEED(10), .rightMotor = MD_BACKWARD, .leftMotor = MD_FORWARD, .nextStateFunc = waitForStraightLineORRight,  .delay = 1200, .indicator = 10 },
+  { .state = GRADUAL_RIGHT_TURN_OP, .leftDutyCycle = SPEED(55), .rightDutyCycle = SPEED(10), .rightMotor = MD_BACKWARD, .leftMotor = MD_FORWARD, .nextStateFunc = handleRightOp,               .delay = 1350, .indicator = 10 },
 
-  { .state = SHARP_LEFT_TURN_0,     .leftDutyCycle = SPEED(10), .rightDutyCycle = SPEED(35), .rightMotor = MD_FORWARD, .leftMotor = MD_BACKWARD, .nextStateFunc = waitForStraightLineORLeft,   .delay = 900, .indicator = 11 },
+  { .state = SHARP_LEFT_TURN_0,     .leftDutyCycle = SPEED(10), .rightDutyCycle = SPEED(55), .rightMotor = MD_FORWARD, .leftMotor = MD_BACKWARD, .nextStateFunc = waitForStraightLineORLeft,   .delay = 1200, .indicator = 11 },
  // { .state = SHARP_LEFT_TURN_1,     .leftDutyCycle = SPEED(10), .rightDutyCycle = SPEED(35), .rightMotor = MD_FORWARD, .leftMotor = MD_BACKWARD, .nextStateFunc = waitForStraightLineORLeft,   .delay = 900, .indicator = 11 },
-  { .state = SHARP_LEFT_TURN_2,     .leftDutyCycle = SPEED(10), .rightDutyCycle = SPEED(35), .rightMotor = MD_FORWARD, .leftMotor = MD_BACKWARD, .nextStateFunc = waitForStraightLineORLeft,   .delay = 900, .indicator = 11 },
+  { .state = SHARP_LEFT_TURN_2,     .leftDutyCycle = SPEED(10), .rightDutyCycle = SPEED(55), .rightMotor = MD_FORWARD, .leftMotor = MD_BACKWARD, .nextStateFunc = waitForStraightLineORLeft,   .delay = 1200, .indicator = 11 },
  // { .state = SHARP_LEFT_TURN_3,     .leftDutyCycle = SPEED(10), .rightDutyCycle = SPEED(35), .rightMotor = MD_FORWARD, .leftMotor = MD_BACKWARD, .nextStateFunc = waitForStraightLineORLeft,   .delay = 900, .indicator = 11 },
  // { .state = SHARP_LEFT_TURN_4,     .leftDutyCycle = SPEED(10), .rightDutyCycle = SPEED(35), .rightMotor = MD_FORWARD, .leftMotor = MD_BACKWARD, .nextStateFunc = waitForStraightLineORLeft,   .delay = 900, .indicator = 11 },
-  { .state = GRADUAL_LEFT_TURN,     .leftDutyCycle = SPEED(10), .rightDutyCycle = SPEED(35), .rightMotor = MD_FORWARD, .leftMotor = MD_BACKWARD, .nextStateFunc = waitForStraightLineORLeft,   .delay = 900, .indicator = 11 },
-  { .state = GRADUAL_LEFT_TURN_OP,  .leftDutyCycle = SPEED(10), .rightDutyCycle = SPEED(40), .rightMotor = MD_FORWARD, .leftMotor = MD_BACKWARD, .nextStateFunc = handleLeftOp,                .delay = 995, .indicator = 11 },
+  { .state = GRADUAL_LEFT_TURN,     .leftDutyCycle = SPEED(10), .rightDutyCycle = SPEED(55), .rightMotor = MD_FORWARD, .leftMotor = MD_BACKWARD, .nextStateFunc = waitForStraightLineORLeft,   .delay = 1200, .indicator = 11 },
+  { .state = GRADUAL_LEFT_TURN_OP,  .leftDutyCycle = SPEED(10), .rightDutyCycle = SPEED(55), .rightMotor = MD_FORWARD, .leftMotor = MD_BACKWARD, .nextStateFunc = handleLeftOp,                .delay = 1350, .indicator = 11 },
 };
 
 static void readAllSensors(void) {
